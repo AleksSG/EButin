@@ -8,7 +8,10 @@ public final class DigitalSignature {
 
     private final byte[] votingOption;
 
-    public DigitalSignature(byte[] votingOption) {
+    public DigitalSignature(byte[] votingOption) throws  NullPointerException {
+        if(votingOption == null)
+            throw new NullPointerException("Digital Signature can't be null");
+
         this.votingOption = votingOption;
     }
 

@@ -1,22 +1,27 @@
 package data;
 
+import exceptions.InvalidNifException;
+
 public final class Nif {
     private final String nif;
 
-    public Nif(String nif){
+    public Nif(String nif) throws InvalidNifException {
+        if(nif == null || !isValidNif(nif))
+            throw new InvalidNifException();
+
         this.nif = nif;
     }
 
-    public boolean isValid() {
-        return isValidNif() || isValidNie();
+    private static boolean isValidNif(String nif) {
+        return isValidDni(nif) || isValidNie(nif);
     }
 
-    private boolean isValidNif() {
-        return this.nif.matches("[0-9]{8}[A-HJ-NP-TV-Z]");
+    private static boolean isValidDni(String nif) {
+        return nif.matches("[0-9]{8}[A-HJ-NP-TV-Z]");
     }
 
-    private boolean isValidNie() {
-        return this.nif.matches("[A-HJ-NP-TV-Z][0-9]{7}[A-HJ-NP-TV-Z]");
+    private static boolean isValidNie(String nif) {
+        return nif.matches("[A-HJ-NP-TV-Z][0-9]{7}[A-HJ-NP-TV-Z]");
     }
 
     public String getNif() {

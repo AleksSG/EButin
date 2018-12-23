@@ -1,13 +1,18 @@
 package data;
 
-public final class MailAdress {
+import exceptions.InvalidMailException;
+
+public final class MailAddress {
     private final String mail;
 
-    public MailAdress(String mail){
+    public MailAddress(String mail) throws InvalidMailException {
+        if(mail == null || !isMailValid(mail))
+            throw new InvalidMailException();
+
         this.mail = mail;
     }
 
-    public boolean isValid() {
+    private static boolean isMailValid(String mail) {
         return mail.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
     }
 
@@ -21,8 +26,8 @@ public final class MailAdress {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        MailAdress mailAdress1 = (MailAdress) o;
-        return mail.equals(mailAdress1.mail);
+        MailAddress mailAddress1 = (MailAddress) o;
+        return mail.equals(mailAddress1.mail);
     }
 
     @Override
@@ -32,6 +37,6 @@ public final class MailAdress {
 
     @Override
     public String toString() {
-        return "MailAdress{" + "mail='" + mail + '\'' + '}';
+        return "MailAddress{" + "mail='" + mail + '\'' + '}';
     }
 }

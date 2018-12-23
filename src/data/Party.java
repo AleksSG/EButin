@@ -3,7 +3,10 @@ package data;
 public final class Party {
     private final String name;
 
-    public Party(String name) {
+    public Party(String name) throws  NullPointerException {
+        if(name == null)
+            throw new NullPointerException("Party name can't be null");
+
         this.name = name;
     }
 
