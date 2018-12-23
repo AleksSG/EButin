@@ -2,17 +2,17 @@ import data.Nif;
 import org.junit.jupiter.api.*;
 
 class NifTest {
-    private Nif dniCorrect;
-    private Nif dniIncorrect;
-    private Nif nieCorrect;
-    private Nif nieIncorrect;
+    private String dniCorrect;
+    private String dniIncorrect;
+    private String nieCorrect;
+    private String nieIncorrect;
 
     @BeforeEach
     void setUp(){
-        dniCorrect = new Nif("11223344A");
-        dniIncorrect = new Nif("11223344I");
-        nieCorrect = new Nif("X1122344A");
-        nieIncorrect = new Nif("O11223344A");
+        dniCorrect = "11223344A";
+        dniIncorrect = "11223344I";
+        nieCorrect = "X1122344A";
+        nieIncorrect = "O11223344A";
     }
 
     @Test
