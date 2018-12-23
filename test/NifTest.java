@@ -1,5 +1,8 @@
 import data.Nif;
+import exceptions.InvalidNifException;
 import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 class NifTest {
     private String dniCorrect;
@@ -16,11 +19,24 @@ class NifTest {
     }
 
     @Test
-    @DisplayName("Check NIF")
+    @DisplayName("Check NIF validation")
     void validNif() {
-        /*Assertions.assertTrue(dniCorrect.isValid());
-        Assertions.assertFalse(dniIncorrect.isValid());
-        Assertions.assertTrue(nieCorrect.isValid());
-        Assertions.assertFalse(nieIncorrect.isValid());*/
+        Assertions.assertDoesNotThrow(() -> new Nif(dniCorrect));
+        Assertions.assertDoesNotThrow(() -> new Nif(nieCorrect));
+
+        Assertions.assertThrows(InvalidNifException.class, () -> new Nif(dniIncorrect));
+        Assertions.assertThrows(InvalidNifException.class, () -> new Nif(nieIncorrect));
+    }
+
+    @Test
+    @DisplayName("Check NIF getNif")
+    void getNif() {
+        try {
+            Assertions.assertEquals(dniCorrect, new Nif(dniCorrect).getNif());
+            Assertions.assertTrue(true);
+        }
+        catch(Exception e) {
+            fail();
+        }
     }
 }
