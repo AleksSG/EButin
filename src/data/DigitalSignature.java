@@ -4,7 +4,7 @@ import utils.DataTypeConverter;
 
 import java.util.Arrays;
 
-public class DigitalSignature {
+public final class DigitalSignature {
 
     private final byte[] votingOption;
 

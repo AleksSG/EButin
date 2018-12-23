@@ -1,6 +1,6 @@
 package data;
 
-final public class Party {
+public final class Party {
     private final String name;
 
     public Party(String name) {
