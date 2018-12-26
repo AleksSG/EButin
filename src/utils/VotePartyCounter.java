@@ -3,7 +3,8 @@ package utils;
 public class VotePartyCounter {
     protected int partyVotes;
 
-    protected void countVote() {
+    public int getPartyVotes() { return partyVotes; }
+    public void countVote() {
         partyVotes++;
     }
 }
