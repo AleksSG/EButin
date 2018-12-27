@@ -9,11 +9,11 @@ import java.util.Set;
 
 public class VoteCounter {
 
-        private HashMap<Party, PartyVoteCounter> partiesVoteCounter;
+        private final HashMap<Party, PartyVoteCounter> partiesVoteCounter;
 
-        private int numVotes;
-        private int numBlanks;
-        private int numNulls;
+        private final PartyVoteCounter numVotes;
+        private final PartyVoteCounter numBlanks;
+        private final PartyVoteCounter numNulls;
 
 
         public VoteCounter(Set<Party> validParties) throws InvalidSetOfPartiesException {
@@ -23,24 +23,24 @@ public class VoteCounter {
             partiesVoteCounter = new HashMap<>();
             validParties.forEach(party -> partiesVoteCounter.put(party, new PartyVoteCounter()));
 
-            numVotes = 0;
-            numBlanks = 0;
-            numNulls = 0;
+            numVotes = new PartyVoteCounter();
+            numBlanks = new PartyVoteCounter();
+            numNulls = new PartyVoteCounter();
         }
 
         private void countParty(Party party) {
             partiesVoteCounter.get(party).increment();
-            numVotes++;
+            numVotes.increment();
         }
 
         private void countNull() {
-            numNulls++;
-            numVotes++;
+            numNulls.increment();
+            numVotes.increment();
         }
 
         private void countBlank() {
-            numBlanks++;
-            numVotes++;
+            numBlanks.increment();
+            numVotes.increment();
         }
 
         public void scrutinize(Party party) {
@@ -61,15 +61,15 @@ public class VoteCounter {
         }
 
         public int getNulls() {
-            return numNulls;
+            return numNulls.getVotes();
         }
 
         public int getBlanks() {
-            return numBlanks;
+            return numBlanks.getVotes();
         }
 
         public int getTotal() {
-            return numVotes;
+            return numVotes.getVotes();
         }
 }
 
