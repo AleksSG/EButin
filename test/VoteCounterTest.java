@@ -21,7 +21,7 @@ class VoteCounterTest {
         try {
             voteCounter = new VoteCounter(validParties);
         } catch (Exception e) {
-            fail();
+            fail(e.getMessage());
         }
 
         //Vots nuls
@@ -51,7 +51,7 @@ class VoteCounterTest {
             Assertions.assertEquals(4, voteCounter.getNulls());
         }
         catch(Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -64,7 +64,7 @@ class VoteCounterTest {
             Assertions.assertEquals(3, voteCounter.getBlanks());
         }
         catch(Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -79,7 +79,7 @@ class VoteCounterTest {
             Assertions.assertEquals(3, voteCounter.getVotesFor(new Party("PP")));
         }
         catch(Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ class VoteCounterTest {
             Assertions.assertEquals(13, voteCounter.getTotal());
         }
         catch(Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 

@@ -36,7 +36,7 @@ class NifTest {
             Assertions.assertTrue(true);
         }
         catch(Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 }
