@@ -18,7 +18,11 @@ class VoteCounterTest {
         validParties.add(new Party("PP"));
         validParties.add(new Party("Cs"));
         validParties.add(new Party("PSC"));
-        voteCounter = new VoteCounter(validParties);
+        try {
+            voteCounter = new VoteCounter(validParties);
+        } catch (Exception e) {
+            fail();
+        }
 
         //Vots nuls
         voteCounter.scrutinize(new Party("Null"));
@@ -82,10 +86,10 @@ class VoteCounterTest {
     @Test
     void getTotalVotes() {
         try {
-            Assertions.assertEquals(6, voteCounter.getTotal());
+            Assertions.assertEquals(11, voteCounter.getTotal());
             voteCounter.scrutinize(new Party("PP"));
             voteCounter.scrutinize(new Party("PP"));
-            Assertions.assertEquals(8, voteCounter.getTotal());
+            Assertions.assertEquals(13, voteCounter.getTotal());
         }
         catch(Exception e) {
             fail();

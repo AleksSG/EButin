@@ -1,15 +1,13 @@
 package data;
 
-import utils.VotePartyCounter;
-
-public final class Party extends VotePartyCounter {
+public final class Party {
     private final String name;
 
     public Party(String name) throws  NullPointerException {
         if(name == null)
             throw new NullPointerException("Party name can't be null");
+
         this.name = name;
-        super.partyVotes = 0;
     }
 
     public String getName() {
