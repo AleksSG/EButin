@@ -10,6 +10,14 @@ public final class Party {
         this.name = name;
     }
 
+    public boolean isEmpty() {
+        return "".equals(name);
+    }
+
+    public boolean isNull() {
+        return "null".equals(name);
+    }
+
     public String getName() {
         return name;
     }

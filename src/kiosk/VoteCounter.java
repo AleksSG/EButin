@@ -30,25 +30,26 @@ public class VoteCounter {
 
         private void countParty(Party party) {
             partiesVoteCounter.get(party).increment();
+            numVotes++;
         }
 
         private void countNull() {
             numNulls++;
+            numVotes++;
         }
 
         private void countBlank() {
             numBlanks++;
+            numVotes++;
         }
 
         public void scrutinize(Party party) {
-            if (new Party("").equals(party)) {
+            if (party.isEmpty())
                 countBlank();
-            } else if (party == null || !partiesVoteCounter.containsKey(party)) {
+            else if (party.isNull() || !partiesVoteCounter.containsKey(party))
                 countNull();
-            } else {
+            else
                 countParty(party);
-            }
-            numVotes++;
         }
 
         public int getVotesFor(Party party) throws PartyNotFoundException {
