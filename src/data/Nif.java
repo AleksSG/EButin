@@ -7,7 +7,7 @@ public final class Nif {
 
     public Nif(String nif) throws InvalidNifException {
         if(nif == null || !isValidNif(nif))
-            throw new InvalidNifException();
+            throw new InvalidNifException("Your nif seems to be incorrect.");
 
         this.nif = nif;
     }
