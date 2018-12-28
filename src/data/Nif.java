@@ -1,13 +1,13 @@
 package data;
 
-import exceptions.InvalidNifException;
+import exceptions.NotValidNifException;
 
 public final class Nif {
     private final String nif;
 
-    public Nif(String nif) throws InvalidNifException {
+    public Nif(String nif) throws NotValidNifException {
         if(nif == null || !isValidNif(nif))
-            throw new InvalidNifException("Your nif seems to be incorrect.");
+            throw new NotValidNifException("Your nif seems to be incorrect.");
 
         this.nif = nif;
     }

@@ -1,6 +1,5 @@
 import data.Party;
 import kiosk.VoteCounter;
-import exceptions.InvalidNifException;
 import org.junit.jupiter.api.*;
 
 import java.util.Set;

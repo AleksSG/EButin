@@ -1,5 +1,6 @@
 package data;
 
+import exceptions.NotValidDigitalSignatureException;
 import utils.DataTypeConverter;
 
 import java.util.Arrays;
@@ -8,9 +9,9 @@ public final class DigitalSignature {
 
     private final byte[] votingOption;
 
-    public DigitalSignature(byte[] votingOption) throws  NullPointerException {
-        if(votingOption == null)
-            throw new NullPointerException("Digital Signature can't be null");
+    public DigitalSignature(byte[] votingOption) throws NotValidDigitalSignatureException {
+        if(votingOption == null || votingOption.length > 32)
+            throw new NotValidDigitalSignatureException();
 
         this.votingOption = votingOption;
     }

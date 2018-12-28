@@ -1,7 +1,7 @@
 package kiosk;
 
 import data.*;
-import exceptions.InvalidSetOfPartiesException;
+import exceptions.NotValidSetOfPartiesException;
 import exceptions.PartyNotFoundException;
 
 import java.util.HashMap;
@@ -16,9 +16,9 @@ public class VoteCounter {
         private final PartyVoteCounter numNulls;
 
 
-        public VoteCounter(Set<Party> validParties) throws InvalidSetOfPartiesException {
+        public VoteCounter(Set<Party> validParties) throws NotValidSetOfPartiesException {
             if(validParties == null || validParties.isEmpty())
-                throw new InvalidSetOfPartiesException();
+                throw new NotValidSetOfPartiesException();
 
             partiesVoteCounter = new HashMap<>();
             validParties.forEach(party -> partiesVoteCounter.put(party, new PartyVoteCounter()));

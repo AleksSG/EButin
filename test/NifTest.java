@@ -1,5 +1,5 @@
 import data.Nif;
-import exceptions.InvalidNifException;
+import exceptions.NotValidNifException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -24,8 +24,8 @@ class NifTest {
         Assertions.assertDoesNotThrow(() -> new Nif(dniCorrect));
         Assertions.assertDoesNotThrow(() -> new Nif(nieCorrect));
 
-        Assertions.assertThrows(InvalidNifException.class, () -> new Nif(dniIncorrect));
-        Assertions.assertThrows(InvalidNifException.class, () -> new Nif(nieIncorrect));
+        Assertions.assertThrows(NotValidNifException.class, () -> new Nif(dniIncorrect));
+        Assertions.assertThrows(NotValidNifException.class, () -> new Nif(nieIncorrect));
     }
 
     @Test
@@ -33,7 +33,6 @@ class NifTest {
     void getNif() {
         try {
             Assertions.assertEquals(dniCorrect, new Nif(dniCorrect).getNif());
-            Assertions.assertTrue(true);
         }
         catch(Exception e) {
             fail(e.getMessage());

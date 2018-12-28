@@ -1,11 +1,13 @@
 package data;
 
+import exceptions.NotValidPartyException;
+
 public final class Party {
     private final String name;
 
-    public Party(String name) throws  NullPointerException {
+    public Party(String name) throws NotValidPartyException {
         if(name == null)
-            throw new NullPointerException("Party name can't be null");
+            throw new NotValidPartyException();
 
         this.name = name;
     }

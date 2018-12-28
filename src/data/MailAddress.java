@@ -1,13 +1,13 @@
 package data;
 
-import exceptions.InvalidMailException;
+import exceptions.NotValidMailException;
 
 public final class MailAddress {
     private final String mail;
 
-    public MailAddress(String mail) throws InvalidMailException {
+    public MailAddress(String mail) throws NotValidMailException {
         if(mail == null || !isMailValid(mail))
-            throw new InvalidMailException();
+            throw new NotValidMailException();
 
         this.mail = mail;
     }
