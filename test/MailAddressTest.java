@@ -1,7 +1,5 @@
 import data.MailAddress;
-import data.Nif;
 import exceptions.NotValidMailException;
-import exceptions.NotValidNifException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

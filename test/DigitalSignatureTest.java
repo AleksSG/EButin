@@ -1,5 +1,4 @@
 import data.DigitalSignature;
-import data.Nif;
 import exceptions.NotValidDigitalSignatureException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
