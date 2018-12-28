@@ -1,9 +1,11 @@
 import data.DigitalSignature;
+import data.MailAddress;
 import data.Nif;
 import data.Party;
 import exceptions.InvalidNifException;
 import org.junit.*;
 import services.ElectoralOrganism;
+import services.MailerService;
 
 import java.util.ArrayList;
 
@@ -51,5 +53,15 @@ class VotingKioskTest {
         }
     }
 
-    private 
+    private class TestMailerService implements MailerService {
+        private boolean emailSend = false;
+        @Override
+        public void send(MailAddress address, DigitalSignature signature) {
+            this.emailSend = true;
+        }
+
+        public boolean isSend(){
+            return this.emailSend;
+        }
+    }
 }
