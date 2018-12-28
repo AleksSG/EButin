@@ -1,11 +1,11 @@
 package kiosk;
 
+import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
 import exceptions.InvalidNifException;
 import exceptions.InvalidSetOfPartiesException;
-import exceptions.PartyNotFoundException;
 import services.*;
 
 import java.util.HashSet;
@@ -16,8 +16,9 @@ public class VotingKiosk {
 
     private ElectoralOrganism elecOrg;
     private MailerService mService;
-    private Nif nif_votant_actual;
+    private Nif nifVotantActual;
     private VoteCounter voteCounter;
+    private DigitalSignature digSignVote;
 
     public VotingKiosk() throws InvalidSetOfPartiesException {
         this.elecOrg = null;
@@ -32,27 +33,19 @@ public class VotingKiosk {
         this.mService = mService;
     }
     public void setNif(Nif nif) {
-        this.nif_votant_actual = nif;
+        this.nifVotantActual = nif;
     }
+
     public void vote(Party party) throws InvalidNifException {
-        if (elecOrg.canVote(this.nif_votant_actual)) {
+        if (elecOrg.canVote(this.nifVotantActual)) {
             voteCounter.scrutinize(party);
         }
-
-        if (quiereRecibo()) {
-            
-        }
+        elecOrg.disableVoter(nifVotantActual);
+        digSignVote = elecOrg.askForDigitalSignature(party);
     }
+    //Aqui el sistema rep l'email del usuari (en el cas de que aquest hagi seleccionat SI en la UI)
     public void sendeReceipt(MailAddress address) {
-
-    }
-
-    private boolean quiereRecibo() {
-        return true;
-    }
-
-    public void introducirEmailReciboE(MailAddress email) {
-
+        mService.send(address, digSignVote);
     }
 
     private Set<Party> fillSet(){
