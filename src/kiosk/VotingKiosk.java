@@ -43,7 +43,7 @@ public class VotingKiosk {
         elecOrg.disableVoter(nifVotantActual);
         digSignVote = elecOrg.askForDigitalSignature(party);
     }
-    //Aqui el sistema rep l'email del usuari (en el cas de que aquest hagi seleccionat SI en la UI)
+
     public void sendeReceipt(MailAddress address) {
         mService.send(address, digSignVote);
     }
@@ -55,5 +55,10 @@ public class VotingKiosk {
         partySet.add(new Party("PSC"));
         partySet.add(new Party("Cs"));
         return partySet;
+    }
+
+    public void finalitzarSessioActual() {
+        this.nifVotantActual = null;
+        this.digSignVote = null;
     }
 }
