@@ -2,20 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42fa90d3-14b8-47b3-aca9-91579f15a87b" name="Default Changelist" comment="Added fail message when exception is thrown">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/DigitalSignature.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/MailAddress.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/Nif.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/Party.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/exceptions/InvalidMailException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/exceptions/InvalidNifException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/kiosk/VoteCounter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/utils/DataTypeConverter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/EButin/utils/VotePartyCounter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/EButin/NifTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/EButin/VoteCounterTest.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,50 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/NifTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="42" selection-start-line="42" selection-end-line="42" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/kiosk/VotingKiosk.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="45" selection-start-line="45" selection-end-line="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data/PartyVoteCounter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/kiosk/VoteCounter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1037">
-              <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
-          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="296">
-              <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
+              <caret line="38" column="31" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -84,16 +30,19 @@
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+              <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/services/ElectoralOrganism.java">
+        <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="43" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="43" />
+            <state relative-caret-position="1241">
+              <caret line="81" column="31" selection-start-line="81" selection-start-column="31" selection-end-line="81" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,7 +60,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="ivan_edit" />
       </map>
     </option>
   </component>
@@ -179,12 +128,6 @@
               <item name="EButin" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="kiosk" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="EButin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="EButin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="EButin" type="b2602c69:ProjectViewProjectNode" />
@@ -524,8 +467,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/NifTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        <state relative-caret-position="296">
+          <caret line="38" column="31" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -565,8 +508,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
+        <state relative-caret-position="1241">
+          <caret line="81" column="31" selection-start-line="81" selection-start-column="31" selection-end-line="81" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -576,7 +519,7 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
         </state>
       </provider>
     </entry>
