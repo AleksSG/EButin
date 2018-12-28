@@ -25,6 +25,7 @@ public class VotingKiosk {
         Set<Party> partySet = fillSet();
         this.voteCounter = new VoteCounter(partySet);
     }
+
     public void setElectoralOrganism(ElectoralOrganism eO){
         this.elecOrg = eO;
     }
@@ -42,11 +43,16 @@ public class VotingKiosk {
         elecOrg.disableVoter(nifVotantActual);
         digSignVote = elecOrg.askForDigitalSignature(party);
     }
-    //Aqui el sistema rep l'email del usuari (en el cas de que aquest hagi seleccionat SI en la UI)
+
     public void sendeReceipt(MailAddress address) {
         mService.send(address, digSignVote);
     }
 
+    public void finalitzarSessioActual() {
+        this.nifVotantActual = null;
+        this.digSignVote = null;
+    }
+    
     private Set<Party> fillSet(){
         Set<Party> partySet = new HashSet<>();
         try {
@@ -59,4 +65,5 @@ public class VotingKiosk {
         }
         return partySet;
     }
+
 }
