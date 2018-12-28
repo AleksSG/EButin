@@ -2,10 +2,12 @@ import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
-import exceptions.InvalidNifException;
-import exceptions.InvalidSetOfPartiesException;
+import exceptions.NotValidDigitalSignatureException;
+import exceptions.NotValidNifException;
+import exceptions.NotValidPartyException;
+import exceptions.NotValidSetOfPartiesException;
 import kiosk.VotingKiosk;
-import org.junit.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.ElectoralOrganism;
@@ -13,18 +15,17 @@ import services.MailerService;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class VotingKioskTest {
 
     private VotingKiosk votingKiosk;
 
-    @Before
+    @BeforeEach
     void setUp() {
         try {
             votingKiosk = new VotingKiosk();
-        } catch (InvalidSetOfPartiesException e) {
+        } catch (NotValidSetOfPartiesException e) {
             fail();
         }
     }
@@ -34,14 +35,14 @@ class VotingKioskTest {
     void ElectoralOrganismTesting() {
         ElectoralOrganism teo = new TestElectoralOrganism();
         try {
-            Assert.assertEquals("Valid NIF can vote",true, teo.canVote(new Nif("12345678A")));
-            Assert.assertEquals("Valid NIF cannot vote", false, teo.canVote(new Nif("23456789A")));
+            assertTrue(teo.canVote(new Nif("12345678A")), "Valid NIF can vote");
+            assertFalse(teo.canVote(new Nif("23456789A")), "Valid NIF cannot vote");
 
             teo.disableVoter(new Nif("12345678A"));
-            //Assert.assertEquals("Same NIF as before, now cannot vote",false, teo.canVote(new Nif("12345678A")));
+            //assertEquals(false, teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
 
-            Assert.assertEquals(new DigitalSignature(new byte[]{1,2,3,4}), teo.askForDigitalSignature(new Party("")));
-        } catch (InvalidNifException e) {
+            assertEquals(new DigitalSignature(new byte[]{1,2,3,4}), teo.askForDigitalSignature(new Party("")));
+        } catch (NotValidNifException | NotValidPartyException | NotValidDigitalSignatureException e) {
             fail();
         }
     }
@@ -61,36 +62,31 @@ class VotingKioskTest {
         public boolean canVote(Nif nif) {
             try {
                 createArray();
-                return canVoteNif.contains(nif);
-            } catch (InvalidNifException e) {
-                return false;
             }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            return canVoteNif.contains(nif);
         }
 
         @Override
         public void disableVoter(Nif nif) {
-            try {
-                createArray();
-                if (canVoteNif.contains(nif))
-                    canVoteNif.remove(nif);
-            } catch (InvalidNifException e) {
-            }
+            canVoteNif.remove(nif);
         }
 
-        private void createArray() throws InvalidNifException{
+        private void createArray() throws NotValidNifException {
             canVoteNif = new ArrayList<>();
             canVoteNif.add(new Nif("12345678A"));
             canVoteNif.add(new Nif("A1234567A"));
         }
 
         @Override
-        public DigitalSignature askForDigitalSignature(Party party) {
+        public DigitalSignature askForDigitalSignature(Party party) throws NotValidDigitalSignatureException {
             return new DigitalSignature(cifrarOpcioVot(party));
         }
 
         private byte[] cifrarOpcioVot(Party party) {
-            byte[] codiCompr = {1, 2, 3, 4};
-            return codiCompr;
+            return new byte[]{1, 2, 3, 4};
         }
     }
 
