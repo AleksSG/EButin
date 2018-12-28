@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="42fa90d3-14b8-47b3-aca9-91579f15a87b" name="Default Changelist" comment="">
+    <list default="true" id="42fa90d3-14b8-47b3-aca9-91579f15a87b" name="Default Changelist" comment="Added fail message when exception is thrown">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kiosk/VoteCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/kiosk/VoteCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/DigitalSignature.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/MailAddress.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/Nif.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/data/Party.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/exceptions/InvalidMailException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/exceptions/InvalidNifException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/kiosk/VoteCounter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/utils/DataTypeConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/EButin/utils/VotePartyCounter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/EButin/NifTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/EButin/VoteCounterTest.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,7 +41,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/kiosk/VotingKiosk.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
+            <state relative-caret-position="595">
               <caret line="45" selection-start-line="45" selection-end-line="45" />
             </state>
           </provider>
@@ -44,14 +56,35 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/kiosk/VoteCounter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
+            <state relative-caret-position="1037">
               <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="296">
+              <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -90,7 +123,6 @@
         <option value="$PROJECT_DIR$/src/exceptions/InvalidSetOfPartiesException.java" />
         <option value="$PROJECT_DIR$/src/data/VoteCounter.java" />
         <option value="$PROJECT_DIR$/src/exceptions/PartyNotFoundException.java" />
-        <option value="$PROJECT_DIR$/test/VoteCounterTest.java" />
         <option value="$PROJECT_DIR$/src/data/DigitalSignature.java" />
         <option value="$PROJECT_DIR$/src/exceptions/InvalidNifException.java" />
         <option value="$PROJECT_DIR$/src/data/Nif.java" />
@@ -98,6 +130,9 @@
         <option value="$PROJECT_DIR$/src/exceptions/HasNotVotedException.java" />
         <option value="$PROJECT_DIR$/src/kiosk/VotingKiosk.java" />
         <option value="$PROJECT_DIR$/src/kiosk/VoteCounter.java" />
+        <option value="$PROJECT_DIR$/test/VoteCounterTest.java" />
+        <option value="$PROJECT_DIR$/test/NifTest.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -110,7 +145,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -171,6 +205,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -250,7 +285,21 @@
       <option name="project" value="LOCAL" />
       <updated>1545927105191</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="out commit ignore">
+      <created>1545941890939</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1545941890939</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added fail message when exception is thrown">
+      <created>1545942109151</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1545942109151</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -281,12 +330,15 @@
     <history-entry file="VoteCounterTest - 2018.12.27 at 14h 12m 59s.xml">
       <configuration name="VoteCounterTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="VoteCounterTest - 2018.12.27 at 21h 13m 27s.xml">
+      <configuration name="VoteCounterTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28502023" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28987855" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -295,7 +347,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3285968" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -378,7 +430,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Kiosk v2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Kiosk v2" />
+    <MESSAGE value="out commit ignore" />
+    <MESSAGE value="Added fail message when exception is thrown" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added fail message when exception is thrown" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/exceptions/InvalidMailException.java">
@@ -412,16 +466,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/VotePartyCounter.java" />
-    <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/services/MailerService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -488,6 +532,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/kiosk/VotingKiosk.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/data/PartyVoteCounter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -495,10 +546,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/kiosk/VotingKiosk.java">
+    <entry file="file://$PROJECT_DIR$/src/kiosk/VoteCounter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="1037">
+          <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -509,13 +563,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/kiosk/VoteCounter.java">
+    <entry file="file://$PROJECT_DIR$/test/VoteCounterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
+        <state relative-caret-position="296">
+          <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
         </state>
       </provider>
     </entry>
