@@ -4,8 +4,7 @@ import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
-import exceptions.InvalidNifException;
-import exceptions.InvalidSetOfPartiesException;
+import exceptions.NotValidSetOfPartiesException;
 import services.*;
 
 import java.util.HashSet;
@@ -20,7 +19,7 @@ public class VotingKiosk {
     private VoteCounter voteCounter;
     private DigitalSignature digSignVote;
 
-    public VotingKiosk() throws InvalidSetOfPartiesException {
+    public VotingKiosk() throws NotValidSetOfPartiesException {
         this.elecOrg = null;
         this.mService = null;
         Set<Party> partySet = fillSet();
@@ -50,10 +49,14 @@ public class VotingKiosk {
 
     private Set<Party> fillSet(){
         Set<Party> partySet = new HashSet<>();
-        //get parties from database
-        partySet.add(new Party("PP"));
-        partySet.add(new Party("PSC"));
-        partySet.add(new Party("Cs"));
+        try {
+            //get parties from database
+            partySet.add(new Party("PP"));
+            partySet.add(new Party("PSC"));
+            partySet.add(new Party("Cs"));
+        }catch(Exception e){
+            System.out.println("error in fillset");
+        }
         return partySet;
     }
 }
