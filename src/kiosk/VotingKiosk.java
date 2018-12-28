@@ -26,6 +26,7 @@ public class VotingKiosk {
         Set<Party> partySet = fillSet();
         this.voteCounter = new VoteCounter(partySet);
     }
+
     public void setElectoralOrganism(ElectoralOrganism eO){
         this.elecOrg = eO;
     }
@@ -48,6 +49,11 @@ public class VotingKiosk {
         mService.send(address, digSignVote);
     }
 
+    public void finalitzarSessioActual() {
+        this.nifVotantActual = null;
+        this.digSignVote = null;
+    }
+    
     private Set<Party> fillSet(){
         Set<Party> partySet = new HashSet<>();
         //get parties from database
@@ -57,8 +63,4 @@ public class VotingKiosk {
         return partySet;
     }
 
-    public void finalitzarSessioActual() {
-        this.nifVotantActual = null;
-        this.digSignVote = null;
-    }
 }
