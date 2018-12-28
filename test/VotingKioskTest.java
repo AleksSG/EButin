@@ -81,8 +81,14 @@ class VotingKioskTest {
         }
 
         @Override
-        public DigitalSignature askForDigitalSignature(Party party) throws NotValidDigitalSignatureException {
-            return new DigitalSignature(cifrarOpcioVot(party));
+        public DigitalSignature askForDigitalSignature(Party party) {
+            try {
+                return new DigitalSignature(cifrarOpcioVot(party));
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         private byte[] cifrarOpcioVot(Party party) {
