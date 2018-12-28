@@ -14,31 +14,43 @@ class VoteCounterTest {
     @BeforeEach
     void setUp() {
         Set<Party> validParties = new HashSet<>();
-        validParties.add(new Party("PP"));
-        validParties.add(new Party("Cs"));
-        validParties.add(new Party("PSC"));
         try {
+            validParties.add(new Party("PP"));
+            validParties.add(new Party("Cs"));
+            validParties.add(new Party("PSC"));
             voteCounter = new VoteCounter(validParties);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
         //Vots nuls
-        voteCounter.scrutinize(new Party("Null"));
-        voteCounter.scrutinize(new Party("Invalid Party1"));
-        voteCounter.scrutinize(new Party("Invalid Party2"));
+        try {
+            voteCounter.scrutinize(new Party("null"));
+            voteCounter.scrutinize(new Party("Invalid Party1"));
+            voteCounter.scrutinize(new Party("Invalid Party2"));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
 
         //Vots blancs
-        voteCounter.scrutinize(new Party(""));
-        voteCounter.scrutinize(new Party(""));
+        try {
+            voteCounter.scrutinize(new Party(""));
+            voteCounter.scrutinize(new Party(""));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
 
         //Vots valids
-        voteCounter.scrutinize(new Party("PP"));
-        voteCounter.scrutinize(new Party("Cs"));
-        voteCounter.scrutinize(new Party("Cs"));
-        voteCounter.scrutinize(new Party("PSC"));
-        voteCounter.scrutinize(new Party("PSC"));
-        voteCounter.scrutinize(new Party("PSC"));
+        try {
+            voteCounter.scrutinize(new Party("PP"));
+            voteCounter.scrutinize(new Party("Cs"));
+            voteCounter.scrutinize(new Party("Cs"));
+            voteCounter.scrutinize(new Party("PSC"));
+            voteCounter.scrutinize(new Party("PSC"));
+            voteCounter.scrutinize(new Party("PSC"));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test

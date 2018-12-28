@@ -20,7 +20,7 @@ class NifTest {
 
     @Test
     @DisplayName("Check NIF validation")
-    void validNif() {
+    void validNifTest() {
         Assertions.assertDoesNotThrow(() -> new Nif(dniCorrect));
         Assertions.assertDoesNotThrow(() -> new Nif(nieCorrect));
 
@@ -30,7 +30,7 @@ class NifTest {
 
     @Test
     @DisplayName("Check NIF getNif")
-    void getNif() {
+    void getNifTest() {
         try {
             Assertions.assertEquals(dniCorrect, new Nif(dniCorrect).getNif());
         }

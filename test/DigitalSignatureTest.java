@@ -19,7 +19,7 @@ class DigitalSignatureTest {
 
     @Test
     @DisplayName("Check digitalSignature validation")
-    void validNif() {
+    void validDigitalSignatureTest() {
         Assertions.assertDoesNotThrow(() -> new DigitalSignature(digitalSignature));
         Assertions.assertThrows(NotValidDigitalSignatureException.class, () -> new DigitalSignature(null));
         Assertions.assertThrows(NotValidDigitalSignatureException.class, () -> new DigitalSignature(notValidDigitalSignature));
@@ -27,7 +27,7 @@ class DigitalSignatureTest {
 
     @Test
     @DisplayName("Check DigitalSignature getVotingOption")
-    void getNif() {
+    void getVotingOptionTest() {
         try {
             Assertions.assertEquals(digitalSignature, new DigitalSignature(digitalSignature).getVotingOption());
         }
