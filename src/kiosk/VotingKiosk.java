@@ -36,7 +36,7 @@ public class VotingKiosk {
         this.nifVotantActual = nif;
     }
 
-    public void vote(Party party) throws InvalidNifException {
+    public void vote(Party party) {
         if (elecOrg.canVote(this.nifVotantActual)) {
             voteCounter.scrutinize(party);
         }
