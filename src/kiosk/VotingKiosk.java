@@ -1,10 +1,9 @@
 package kiosk;
 
-import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
-import exceptions.NotValidSetOfPartiesException;
+import exceptions.*;
 import services.*;
 
 import java.util.HashSet;
@@ -15,54 +14,88 @@ public class VotingKiosk {
 
     private ElectoralOrganism elecOrg;
     private MailerService mService;
-    private Nif nifVotantActual;
-    private VoteCounter voteCounter;
-    private DigitalSignature digSignVote;
 
-    public VotingKiosk() throws NotValidSetOfPartiesException {
+    private VoteCounter voteCounter;
+    private Session session;
+
+    public VotingKiosk() {
         this.elecOrg = null;
         this.mService = null;
-        Set<Party> partySet = fillSet();
-        this.voteCounter = new VoteCounter(partySet);
+        this.session = null;
+        setValidParties();
     }
 
-    public void setElectoralOrganism(ElectoralOrganism eO){
+    private void setValidParties() {
+        try {
+            this.voteCounter = new VoteCounter(getPartiesFromDB());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setElectoralOrganism(ElectoralOrganism eO) throws ElectoralOrgAlreadySetException {
+        if(elecOrg != null)
+            throw new ElectoralOrgAlreadySetException();
+
         this.elecOrg = eO;
     }
-    public void setMailerService(MailerService mService){
+
+    public void setMailerService(MailerService mService) throws MailerServiceAlreadySetException {
+        if(this.mService != null)
+            throw new MailerServiceAlreadySetException();
+
         this.mService = mService;
     }
-    public void setNif(Nif nif) {
-        this.nifVotantActual = nif;
+
+    public void startSession(Nif nif) throws SessionNotFinishedException {
+        if(session != null)
+            throw new SessionNotFinishedException();
+
+        session = new Session(nif);
     }
 
-    public void vote(Party party) {
-        if (elecOrg.canVote(this.nifVotantActual)) {
+    public void vote(Party party) throws SessionNotStartedException {
+        if(party == null)
+            throw new NullPointerException("The parameter party mustn't be null.");
+        if(elecOrg == null)
+            throw new NullPointerException("The ElectoralOrganism han't ben set yet.");
+        if(voteCounter == null)
+            throw new NullPointerException("The VoteCounter hasn't been initialized.");
+        if(session == null)
+            throw new SessionNotStartedException();
+
+        if (elecOrg.canVote(this.session.getNif())) {
             voteCounter.scrutinize(party);
+            elecOrg.disableVoter(this.session.getNif());
         }
-        elecOrg.disableVoter(nifVotantActual);
-        digSignVote = elecOrg.askForDigitalSignature(party);
+
+        this.session.setDigitalSignature(elecOrg.askForDigitalSignature(party));
     }
 
-    public void sendeReceipt(MailAddress address) {
-        mService.send(address, digSignVote);
+    public void sendeReceipt(MailAddress address) throws SessionNotStartedException, HasNotVotedException {
+        if(session == null)
+            throw new SessionNotStartedException();
+
+        mService.send(address, this.session.getDigitalSignature());
     }
 
-    public void finalitzarSessioActual() {
-        this.nifVotantActual = null;
-        this.digSignVote = null;
+    public void endSession() {
+        this.session = null;
     }
     
-    private Set<Party> fillSet(){
+    private static Set<Party> getPartiesFromDB(){
         Set<Party> partySet = new HashSet<>();
+
         try {
-            //get parties from database
             partySet.add(new Party("PP"));
             partySet.add(new Party("PSC"));
             partySet.add(new Party("Cs"));
-        }catch(Exception e){
-            System.out.println("error in fillset");
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
         return partySet;
     }
 

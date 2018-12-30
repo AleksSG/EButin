@@ -44,6 +44,9 @@ public class VoteCounter {
         }
 
         public void scrutinize(Party party) {
+            if(party == null)
+                throw new NullPointerException("The parameter party mustn't be null");
+
             if (party.isEmpty())
                 countBlank();
             else if (party.isNull() || !partiesVoteCounter.containsKey(party))
