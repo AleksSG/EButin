@@ -27,6 +27,8 @@ public class VotingKiosk {
 
     private void setValidParties() {
         try {
+            //get parties from an internal/external database
+            //a default one has been put instead, modify getPartiesFromDB in order to add the one needed.
             this.voteCounter = new VoteCounter(getPartiesFromDB());
         }
         catch(Exception e) {
@@ -80,7 +82,7 @@ public class VotingKiosk {
         mService.send(address, this.session.getDigitalSignature());
     }
 
-    public void endSession() {
+    public void closeSession() {
         this.session = null;
     }
     
