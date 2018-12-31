@@ -2,11 +2,9 @@ import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
-import exceptions.NotValidDigitalSignatureException;
-import exceptions.NotValidNifException;
-import exceptions.NotValidPartyException;
-import exceptions.NotValidSetOfPartiesException;
+import exceptions.*;
 import kiosk.VotingKiosk;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,9 +23,17 @@ class VotingKioskTest {
     void setUp() {
         try {
             votingKiosk = new VotingKiosk();
+            votingKiosk.setNif(new Nif("12345678A"));
         } catch (NotValidSetOfPartiesException e) {
             fail();
+        } catch (NotValidNifException e) {
+            fail();
         }
+    }
+
+    @Test
+    void voteTest() {
+
     }
 
     @Test
@@ -39,7 +45,7 @@ class VotingKioskTest {
             assertFalse(teo.canVote(new Nif("23456789A")), "Valid NIF cannot vote");
 
             teo.disableVoter(new Nif("12345678A"));
-            //assertEquals(false, teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
+            assertEquals(false, teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
 
             assertEquals(new DigitalSignature(new byte[]{1,2,3,4}), teo.askForDigitalSignature(new Party("")));
         } catch (NotValidNifException | NotValidPartyException | NotValidDigitalSignatureException e) {
@@ -51,6 +57,14 @@ class VotingKioskTest {
     @DisplayName("Electoral Organism Double Test")
     void MailerServiceTest() {
         MailerService mst = new TestMailerService();
+        try {
+            mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[]{}));
+            Assert.assertEquals("Check if send", true, ((TestMailerService) mst).isSend());
+        } catch (NotValidDigitalSignatureException e) {
+            fail();
+        } catch (NotValidMailException e) {
+            fail();
+        }
     }
 
 
