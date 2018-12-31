@@ -2,12 +2,11 @@ import data.DigitalSignature;
 import data.MailAddress;
 import data.Nif;
 import data.Party;
-import exceptions.*;
 import exceptions.NotValidDigitalSignatureException;
+import exceptions.NotValidMailException;
 import exceptions.NotValidNifException;
 import exceptions.NotValidPartyException;
 import kiosk.VotingKiosk;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,15 +24,6 @@ class VotingKioskTest {
 
     @BeforeEach
     void setUp() {
-        try {
-            votingKiosk = new VotingKiosk();
-            votingKiosk.setNif(new Nif("12345678A"));
-        } catch (NotValidSetOfPartiesException e) {
-            fail();
-        } catch (NotValidNifException e) {
-            fail();
-        }
-        votingKiosk = new VotingKiosk();
         votingKiosk = new VotingKioskDouble();
     }
 
@@ -51,7 +41,7 @@ class VotingKioskTest {
             assertFalse(teo.canVote(new Nif("23456789A")), "Valid NIF cannot vote");
 
             teo.disableVoter(new Nif("12345678A"));
-            assertEquals(false, teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
+            assertFalse(teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
 
             assertEquals(new DigitalSignature(new byte[]{1,2,3,4}), teo.askForDigitalSignature(new Party("")));
         } catch (NotValidNifException | NotValidPartyException | NotValidDigitalSignatureException e) {
@@ -62,18 +52,16 @@ class VotingKioskTest {
     @Test
     @DisplayName("Electoral Organism Double Test")
     void MailerServiceTest() {
-        MailerService mst = new TestMailerService();
+        TestMailerService mst = new TestMailerService();
         try {
             mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[]{}));
-            Assert.assertEquals("Check if send", true, ((TestMailerService) mst).isSend());
-        } catch (NotValidDigitalSignatureException e) {
-            fail();
-        } catch (NotValidMailException e) {
+            assertTrue(mst.isSend(), "Check if send");
+        } catch (NotValidDigitalSignatureException | NotValidMailException e) {
             fail();
         }
     }
 
-    private class VotingKioskDouble extends VotingKiosk {
+    private static class VotingKioskDouble extends VotingKiosk {
         @Override
         public Set<Party> getPartiesFromDB() {
             Set<Party> partySet = new HashSet<>();
@@ -91,7 +79,7 @@ class VotingKioskTest {
         }
     }
 
-    private class TestElectoralOrganism implements ElectoralOrganism {
+    private static class TestElectoralOrganism implements ElectoralOrganism {
 
         private HashSet<Nif> canVoteNif;
 
@@ -133,14 +121,14 @@ class VotingKioskTest {
         }
     }
 
-    private class TestMailerService implements MailerService {
+    private static class TestMailerService implements MailerService {
         private boolean emailSend = false;
         @Override
         public void send(MailAddress address, DigitalSignature signature) {
             this.emailSend = true;
         }
 
-        public boolean isSend(){
+        boolean isSend(){
             return this.emailSend;
         }
     }
