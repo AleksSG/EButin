@@ -12,6 +12,7 @@ import services.ElectoralOrganism;
 import services.MailerService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +30,7 @@ class VotingKioskTest {
         } catch (NotValidNifException e) {
             fail();
         }
+        votingKiosk = new VotingKiosk();
     }
 
     @Test
@@ -70,12 +72,12 @@ class VotingKioskTest {
 
     private class TestElectoralOrganism implements ElectoralOrganism {
 
-        private ArrayList<Nif> canVoteNif;
+        private HashSet<Nif> canVoteNif;
 
         @Override
         public boolean canVote(Nif nif) {
             try {
-                createArray();
+                createSet();
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -88,8 +90,8 @@ class VotingKioskTest {
             canVoteNif.remove(nif);
         }
 
-        private void createArray() throws NotValidNifException {
-            canVoteNif = new ArrayList<>();
+        private void createSet() throws NotValidNifException {
+            canVoteNif = new HashSet<>();
             canVoteNif.add(new Nif("12345678A"));
             canVoteNif.add(new Nif("A1234567A"));
         }
