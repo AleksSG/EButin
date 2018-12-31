@@ -5,7 +5,6 @@ import data.Party;
 import exceptions.NotValidDigitalSignatureException;
 import exceptions.NotValidNifException;
 import exceptions.NotValidPartyException;
-import exceptions.NotValidSetOfPartiesException;
 import kiosk.VotingKiosk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import services.ElectoralOrganism;
 import services.MailerService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +23,7 @@ class VotingKioskTest {
 
     @BeforeEach
     void setUp() {
-        votingKiosk = new VotingKiosk();
+        votingKiosk = new VotingKioskDouble();
     }
 
     @Test
@@ -50,6 +49,23 @@ class VotingKioskTest {
         MailerService mst = new TestMailerService();
     }
 
+    private class VotingKioskDouble extends VotingKiosk {
+        @Override
+        public Set<Party> getPartiesFromDB() {
+            Set<Party> partySet = new HashSet<>();
+
+            try {
+                partySet.add(new Party("PP"));
+                partySet.add(new Party("PSC"));
+                partySet.add(new Party("Cs"));
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return partySet;
+        }
+    }
 
     private class TestElectoralOrganism implements ElectoralOrganism {
 

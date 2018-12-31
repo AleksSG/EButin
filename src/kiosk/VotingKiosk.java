@@ -86,19 +86,8 @@ public class VotingKiosk {
         this.session = null;
     }
     
-    private static Set<Party> getPartiesFromDB(){
-        Set<Party> partySet = new HashSet<>();
-
-        try {
-            partySet.add(new Party("PP"));
-            partySet.add(new Party("PSC"));
-            partySet.add(new Party("Cs"));
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return partySet;
+    public Set<Party> getPartiesFromDB(){
+        return null;
     }
 
 }
