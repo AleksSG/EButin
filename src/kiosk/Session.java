@@ -3,17 +3,25 @@ package kiosk;
 import data.DigitalSignature;
 import data.Nif;
 import exceptions.HasNotVotedException;
+import exceptions.NotValidDigitalSignatureException;
+import exceptions.NotValidNifException;
 
 public class Session {
     private Nif nif;
     private DigitalSignature digitalSignature;
 
-    public Session(Nif nif) {
+    public Session(Nif nif) throws NotValidNifException {
+        if(nif == null)
+            throw new NotValidNifException("Nif can't be null");
+
         this.nif = nif;
         digitalSignature = null;
     }
 
-    public void setDigitalSignature(DigitalSignature digitalSignature) {
+    public void setDigitalSignature(DigitalSignature digitalSignature) throws NotValidDigitalSignatureException {
+        if(digitalSignature == null)
+            throw new NotValidDigitalSignatureException();
+
         this.digitalSignature = digitalSignature;
     }
 
@@ -24,7 +32,7 @@ public class Session {
         return digitalSignature;
     }
 
-    public Nif getNif() {
+    Nif getNif() {
         return nif;
     }
 }

@@ -4,9 +4,9 @@ import data.MailAddress;
 import data.Nif;
 import data.Party;
 import exceptions.*;
-import services.*;
+import services.ElectoralOrganism;
+import services.MailerService;
 
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -50,14 +50,21 @@ public class VotingKiosk {
         this.mService = mService;
     }
 
-    public void startSession(Nif nif) throws SessionNotFinishedException {
+    public void startSession(Nif nif) throws SessionNotFinishedException, NotValidNifException {
         if(session != null)
             throw new SessionNotFinishedException();
 
         session = new Session(nif);
     }
 
-    public void vote(Party party) throws SessionNotStartedException {
+    public void closeSession() throws SessionNotStartedException {
+        if(this.session == null)
+            throw new SessionNotStartedException();
+
+        this.session = null;
+    }
+
+    public void vote(Party party) throws SessionNotStartedException, CanNotVoteException, NotValidDigitalSignatureException {
         if(party == null)
             throw new NullPointerException("The parameter party mustn't be null.");
         if(elecOrg == null)
@@ -67,12 +74,12 @@ public class VotingKiosk {
         if(session == null)
             throw new SessionNotStartedException();
 
-        if (elecOrg.canVote(this.session.getNif())) {
-            voteCounter.scrutinize(party);
-            elecOrg.disableVoter(this.session.getNif());
-        }
+        if (!elecOrg.canVote(this.session.getNif()))
+            throw new CanNotVoteException();
 
-        this.session.setDigitalSignature(elecOrg.askForDigitalSignature(party));
+        voteCounter.scrutinize(party);
+        elecOrg.disableVoter(this.session.getNif());
+        session.setDigitalSignature(elecOrg.askForDigitalSignature(party));
     }
 
     public void sendeReceipt(MailAddress address) throws SessionNotStartedException, HasNotVotedException {
@@ -80,10 +87,6 @@ public class VotingKiosk {
             throw new SessionNotStartedException();
 
         mService.send(address, this.session.getDigitalSignature());
-    }
-
-    public void closeSession() {
-        this.session = null;
     }
     
     public Set<Party> getPartiesFromDB(){
