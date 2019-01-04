@@ -16,7 +16,7 @@ public final class BiometricFingerPrint {
         this.bioFingerPrint = bioFingerPrint;
     }
 
-    byte[] getBioFingerPrint() {
+    public byte[] getBioFingerPrint() {
         return bioFingerPrint;
     }
 

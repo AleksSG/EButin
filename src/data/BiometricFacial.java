@@ -16,7 +16,7 @@ public final class BiometricFacial {
         this.bioFacial = bioFacial;
     }
 
-    byte[] getBioFacial() {
+    public byte[] getBioFacial() {
         return bioFacial;
     }
 
