@@ -99,5 +99,29 @@ class BiometricDataTest {
 
     }
 
+    @Test
+    @DisplayName("Reading Password")
+    void readPasswordTest() {
+        try {
+            BiometricData dataReaded = bread.readBiometricData();
+
+            assertEquals(dataReaded, new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32])));
+            assertNotEquals(dataReaded, new BiometricData(new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4}), new BiometricFingerPrint(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4})));
+        } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("Verification test")
+    void verificationTest() {
+        try {
+            this.bsoft = new BiometricSoftwareTest(new BiometricData(bscan.scanFace(), bscan.scanFingerPrint()), bread.readBiometricData());
+            assertThrows(BiometricVerificationFailedException.class, () -> bsoft.verifyBiometricData());
+        } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
+            fail();
+        }
+    }
+
     
 }
