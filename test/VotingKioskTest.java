@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.ElectoralOrganism;
 import services.MailerService;
+import verification.ManualVerification;
+import verification.IdentityVerify;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,20 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VotingKioskTest {
+
+    private static class ManualVerificationCorrectDouble extends ManualVerification {
+
+        @Override
+        public boolean logInSupportStaff() {
+            //First time login successfull
+            return true;
+        }
+
+        @Override
+        public Nif getManualNif() throws NotValidNifException {
+            return new Nif("12345678A");
+        }
+    }
 
     private static class VotingKioskDouble extends VotingKiosk {
         @Override
@@ -95,7 +111,7 @@ class VotingKioskTest {
     private VotingKiosk votingKiosk;
     private ElectoralOrganism teo;
     private TestMailerService mst;
-    private Nif nif;
+    private IdentityVerify identityVerify;
     private MailAddress mailAddress;
     private Party party;
 
@@ -106,7 +122,7 @@ class VotingKioskTest {
         mst = new TestMailerService();
 
         try {
-            nif = new Nif("12345678A");
+            identityVerify = new ManualVerificationCorrectDouble();
             mailAddress = new MailAddress("blabla@gmail.com");
             party = new Party("PP");
             votingKiosk.setElectoralOrganism(teo);
@@ -131,16 +147,16 @@ class VotingKioskTest {
     @Test
     @DisplayName("startSessionTest")
     void startSessionTest() {
-        assertThrows(NotValidNifException.class, () -> votingKiosk.startSession(null));
-        assertDoesNotThrow(() -> votingKiosk.startSession(nif));
-        assertThrows(SessionNotFinishedException.class, () -> votingKiosk.startSession(nif));
+        assertThrows(VerificationIdentityFailedException.class, () -> votingKiosk.startSession(null));
+        assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
+        assertThrows(SessionNotFinishedException.class, () -> votingKiosk.startSession(identityVerify));
     }
 
     @Test
     @DisplayName("closeSessionTest")
     void closeSessionTest() {
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.closeSession());
-        assertDoesNotThrow(() -> votingKiosk.startSession(nif));
+        assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertDoesNotThrow(() -> votingKiosk.closeSession());
     }
 
@@ -148,7 +164,7 @@ class VotingKioskTest {
     void voteTest() {
         assertThrows(NullPointerException.class, () -> votingKiosk.vote(null));
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.vote(party));
-        assertDoesNotThrow(() -> votingKiosk.startSession(nif));
+        assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertDoesNotThrow(() -> votingKiosk.vote(party));
         assertThrows(CanNotVoteException.class, () -> votingKiosk.vote(party));
     }
@@ -156,7 +172,7 @@ class VotingKioskTest {
     @Test
     void sendeReceiptTest() {
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.sendeReceipt(mailAddress));
-        assertDoesNotThrow(() -> votingKiosk.startSession(nif));
+        assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertThrows(HasNotVotedException.class, () -> votingKiosk.sendeReceipt(mailAddress));
         assertDoesNotThrow(() -> votingKiosk.vote(party));
         assertDoesNotThrow(() -> votingKiosk.sendeReceipt(mailAddress));

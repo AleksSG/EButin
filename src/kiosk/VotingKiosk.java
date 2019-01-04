@@ -1,11 +1,11 @@
 package kiosk;
 
 import data.MailAddress;
-import data.Nif;
 import data.Party;
 import exceptions.*;
 import services.ElectoralOrganism;
 import services.MailerService;
+import verification.IdentityVerify;
 
 import java.util.Set;
 
@@ -50,11 +50,11 @@ public class VotingKiosk {
         this.mService = mService;
     }
 
-    public void startSession(Nif nif) throws SessionNotFinishedException, NotValidNifException {
+    public void startSession(IdentityVerify identityVerify) throws SessionNotFinishedException, VerificationIdentityFailedException {
         if(session != null)
             throw new SessionNotFinishedException();
 
-        session = new Session(nif);
+        session = new Session(identityVerify);
     }
 
     public void closeSession() throws SessionNotStartedException {

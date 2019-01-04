@@ -4,17 +4,18 @@ import data.DigitalSignature;
 import data.Nif;
 import exceptions.HasNotVotedException;
 import exceptions.NotValidDigitalSignatureException;
-import exceptions.NotValidNifException;
+import exceptions.VerificationIdentityFailedException;
+import verification.IdentityVerify;
 
 public class Session {
     private Nif nif;
     private DigitalSignature digitalSignature;
 
-    public Session(Nif nif) throws NotValidNifException {
-        if(nif == null)
-            throw new NotValidNifException("Nif can't be null");
+    public Session(IdentityVerify identityVerify) throws VerificationIdentityFailedException {
+        if(identityVerify == null)
+            throw new VerificationIdentityFailedException("This parameter can't be null");
 
-        this.nif = nif;
+        this.nif = identityVerify.getNif();
         digitalSignature = null;
     }
 
