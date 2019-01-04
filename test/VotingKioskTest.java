@@ -166,7 +166,7 @@ class VotingKioskTest {
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.vote(party));
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertDoesNotThrow(() -> votingKiosk.vote(party));
-        assertThrows(CanNotVoteException.class, () -> votingKiosk.vote(party));
+        assertThrows(VotingRightsFailedException.class, () -> votingKiosk.vote(party));
     }
 
     @Test

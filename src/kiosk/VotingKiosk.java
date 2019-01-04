@@ -64,7 +64,7 @@ public class VotingKiosk {
         this.session = null;
     }
 
-    public void vote(Party party) throws SessionNotStartedException, CanNotVoteException, NotValidDigitalSignatureException {
+    public void vote(Party party) throws SessionNotStartedException, NotValidDigitalSignatureException, VotingRightsFailedException {
         if(party == null)
             throw new NullPointerException("The parameter party mustn't be null.");
         if(elecOrg == null)
@@ -75,7 +75,7 @@ public class VotingKiosk {
             throw new SessionNotStartedException();
 
         if (!elecOrg.canVote(this.session.getNif()))
-            throw new CanNotVoteException();
+            throw new VotingRightsFailedException();
 
         voteCounter.scrutinize(party);
         elecOrg.disableVoter(this.session.getNif());
