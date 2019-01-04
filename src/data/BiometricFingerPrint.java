@@ -10,7 +10,7 @@ public final class BiometricFingerPrint {
     private final byte[] bioFingerPrint;
 
     public BiometricFingerPrint(byte[] bioFingerPrint) throws NotValidBiometricFingerPrintException {
-        if(bioFingerPrint == null)
+        if(bioFingerPrint == null || bioFingerPrint.length != 32)
             throw new NotValidBiometricFingerPrintException();
 
         this.bioFingerPrint = bioFingerPrint;

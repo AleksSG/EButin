@@ -10,7 +10,7 @@ public final class BiometricFacial {
     private final byte[] bioFacial;
 
     public BiometricFacial(byte[] bioFacial) throws NotValidBiometricFacialException {
-        if(bioFacial == null)
+        if(bioFacial == null || bioFacial.length != 32)
             throw new NotValidBiometricFacialException();
 
         this.bioFacial = bioFacial;

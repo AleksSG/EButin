@@ -12,7 +12,7 @@ class DigitalSignatureTest {
 
     @BeforeEach
     void setUp(){
-        digitalSignature = new byte[]{ 127, 0, 0, 1 };
+        digitalSignature = new byte[32];
         notValidDigitalSignature = new byte[33];
     }
 

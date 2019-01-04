@@ -10,7 +10,7 @@ public final class DigitalSignature {
     private final byte[] votingOption;
 
     public DigitalSignature(byte[] votingOption) throws NotValidDigitalSignatureException {
-        if(votingOption == null || votingOption.length > 32)
+        if(votingOption == null || votingOption.length != 32)
             throw new NotValidDigitalSignatureException();
 
         this.votingOption = votingOption;

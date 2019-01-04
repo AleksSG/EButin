@@ -20,7 +20,7 @@ class SessionTest {
         try {
             nif = new Nif("12345678Z");
             session = new Session(nif);
-            digitalSignature = new DigitalSignature(new byte[] {1, 2, 3, 4});
+            digitalSignature = new DigitalSignature(new byte[32]);
         } catch (NotValidNifException | NotValidDigitalSignatureException e) {
             fail();
         }

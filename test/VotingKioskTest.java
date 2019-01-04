@@ -76,7 +76,7 @@ class VotingKioskTest {
         }
 
         private byte[] cifrarOpcioVot(Party party) {
-            return new byte[]{1, 2, 3, 4};
+            return new byte[32];
         }
     }
 
@@ -172,7 +172,7 @@ class VotingKioskTest {
             teo.disableVoter(new Nif("12345678A"));
             assertFalse(teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
 
-            assertEquals(new DigitalSignature(new byte[]{1,2,3,4}), teo.askForDigitalSignature(new Party("")));
+            assertEquals(new DigitalSignature(new byte[32]), teo.askForDigitalSignature(new Party("")));
         } catch (NotValidNifException | NotValidPartyException | NotValidDigitalSignatureException e) {
             fail();
         }
@@ -182,7 +182,7 @@ class VotingKioskTest {
     @DisplayName("Electoral Organism Double Test")
     void MailerServiceTest() {
         try {
-            mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[]{}));
+            mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[32]));
             assertTrue(mst.isSend(), "Check if send");
         } catch (NotValidDigitalSignatureException | NotValidMailException e) {
             fail();
