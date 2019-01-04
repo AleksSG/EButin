@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BiometricDataTest {
+class BiometricDataTest {
 
     private static class BiometricScannerTest implements BiometricScanner {
 
@@ -88,18 +88,12 @@ public class BiometricDataTest {
         try {
             BiometricData dataScanned = new BiometricData(bscan.scanFace(), bscan.scanFingerPrint());
 
-            assertTrue(dataScanned.equals(
-                    new BiometricData(new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4}),
-                                      new BiometricFingerPrint(new byte[]{10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13})
-                    ))
-            );
+            assertEquals(dataScanned, new BiometricData(new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4}),
+                    new BiometricFingerPrint(new byte[]{10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13})
+            ));
 
-            assertFalse(dataScanned.equals(new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32]))));
-        } catch (NotValidBiometricFacialException bfe) {
-            fail();
-        } catch (NotValidBiometricFingerPrintException bfpe) {
-            fail();
-        } catch (NotValidBiometricDataException bd) {
+            assertNotEquals(dataScanned, new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32])));
+        } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
             fail();
         }
 
