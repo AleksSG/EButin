@@ -1,15 +1,15 @@
-import data.PartyVoteCounter;
+import kiosk.VoteCounter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class PartyVoteCounterTest {
-    private PartyVoteCounter counter;
+    private VoteCounter.PartyVoteCounter counter;
 
     @BeforeEach
     void setUp(){
-        counter = new PartyVoteCounter();
+        counter = new VoteCounter.PartyVoteCounter();
     }
 
     @Test
