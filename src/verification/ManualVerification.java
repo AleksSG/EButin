@@ -41,7 +41,6 @@ public class ManualVerification implements IdentityVerify {
 
     public Nif getManualNif() throws NotValidNifException {
         //TO-DO || Implemment an screen to make the logged support staff member to write the Nif.
-
-        return null;
+        throw new NotValidNifException("Nif wrong");
     }
 }
