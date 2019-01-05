@@ -7,15 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 class BiometricFacialTest {
-    private byte[] bioFacialCorrect, bioFacialIncorrect;
+    private BigInteger bioFacialCorrect;
 
     @BeforeEach
     void setUp(){
-        bioFacialCorrect = new byte[32];
-        bioFacialIncorrect = new byte[33];
+        bioFacialCorrect = new BigInteger("123");
     }
 
     @Test
@@ -23,14 +24,13 @@ class BiometricFacialTest {
     void validBiometricFacialTest() {
         Assertions.assertDoesNotThrow(() -> new BiometricFacial(bioFacialCorrect));
         Assertions.assertThrows(NotValidBiometricFacialException.class, () -> new BiometricFacial(null));
-        Assertions.assertThrows(NotValidBiometricFacialException.class, () -> new BiometricFacial(bioFacialIncorrect));
     }
 
     @Test
     @DisplayName("Check biometricFacial getBioFacial")
     void getBioFacialTest() {
         try {
-            Assertions.assertEquals(bioFacialCorrect, new BiometricFacial(bioFacialCorrect).getBioFacial());
+            Assertions.assertEquals(bioFacialCorrect, new BiometricFacial(bioFacialCorrect).getNumber());
         }
         catch(Exception e) {
             fail(e.getMessage());

@@ -5,15 +5,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 class BiometricFingerPrintTest {
-    private byte[] bioFingerPrintCorrect, bioFingerPrintIncorrect;
+    private BigInteger bioFingerPrintCorrect;
 
     @BeforeEach
     void setUp(){
-        bioFingerPrintCorrect = new byte[32];
-        bioFingerPrintIncorrect = new byte[33];
+        bioFingerPrintCorrect = new BigInteger("123");
     }
 
     @Test
@@ -21,14 +22,13 @@ class BiometricFingerPrintTest {
     void validBioFingerPrintTest() {
         Assertions.assertDoesNotThrow(() -> new BiometricFingerPrint(bioFingerPrintCorrect));
         Assertions.assertThrows(NotValidBiometricFingerPrintException.class, () -> new BiometricFingerPrint(null));
-        Assertions.assertThrows(NotValidBiometricFingerPrintException.class, () -> new BiometricFingerPrint(bioFingerPrintIncorrect));
     }
 
     @Test
     @DisplayName("Check bioFingerPrint getBioFingerPrint")
     void getBioFingerPrintTest() {
         try {
-            Assertions.assertEquals(bioFingerPrintCorrect, new BiometricFingerPrint(bioFingerPrintCorrect).getBioFingerPrint());
+            Assertions.assertEquals(bioFingerPrintCorrect, new BiometricFingerPrint(bioFingerPrintCorrect).getNumber());
         }
         catch(Exception e) {
             fail(e.getMessage());

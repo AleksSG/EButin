@@ -7,12 +7,14 @@ import exceptions.*;
 public class BiometricVerification implements IdentityVerify {
 
     private BiometricSoftware software;
+    private IdentityVerify alternative;
 
-    public BiometricVerification(BiometricSoftware software) {
+    public BiometricVerification(BiometricSoftware software, IdentityVerify alternative) {
         if(software == null)
             throw new NullPointerException("Parameter musnt't be null");
 
         this.software = software;
+        this.alternative = alternative;
     }
 
     @Override
@@ -24,9 +26,13 @@ public class BiometricVerification implements IdentityVerify {
             return getNifFromPassport();
 
         } catch (BiometricVerificationFailedException e) {
-            throw new VerificationIdentityFailedException(e.getMessage());
+            if(alternative == null)
+                throw new VerificationIdentityFailedException(e.getMessage());
+            return alternative.getNif();
         } catch (NotValidNifException e) {
-            throw new VerificationIdentityFailedException("Couldn't read the Nif from Passport");
+            if(alternative == null)
+                throw new VerificationIdentityFailedException("Couldn't read the Nif from Passport");
+            return alternative.getNif();
         }
     }
 

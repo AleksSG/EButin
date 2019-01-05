@@ -5,6 +5,7 @@ import exceptions.NotValidSetOfPartiesException;
 import exceptions.PartyNotFoundException;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 public class VoteCounter {
@@ -73,6 +74,10 @@ public class VoteCounter {
 
     public int getTotal() {
         return numVotes.getVotes();
+    }
+
+    Set<Party> getValidParties() {
+        return partiesVoteCounter.keySet();
     }
 
     public static final class PartyVoteCounter {

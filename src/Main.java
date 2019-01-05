@@ -1,22 +1,35 @@
 import biometric.BiometricReader;
+import biometric.BiometricSoftware;
 import data.*;
 import exceptions.*;
 import kiosk.VotingKiosk;
 import services.ElectoralOrganism;
+import utils.BigMaths;
 import verification.BiometricVerification;
 import verification.IdentityVerify;
 import verification.ManualVerification;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+
+import static utils.BigMaths.areBigIntegersSimilar;
 
 public class Main {
     private static final int VALID_STAFF_ID = 23;
     private static final String VALID_STAFF_PASSWORD = "root";
 
+    //Uncomment this one and comment next in order to fail the biometric method and start the alternative (manual method).
+    //private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766");
+    private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766");
+
+    private static final BigInteger FINGER_NUMBER_SCANNED = new BigInteger("43534534634534348765398642084762370856342875647353784650347453485348");
+    private static final BigInteger FACE_NUMBER_PASSPORT = new BigInteger("12332074637085634950873632074650748365038465940984873504736348734853");
+    private static final BigInteger FINGER_NUMBER_PASSPORT = new BigInteger("43537860843765048730856278068047362084726478623580635748658473620831");
+
     private static Scanner reader;
-    private static Set<Party> validParties;
     private static VotingKiosk votingKiosk;
 
     public static void main(String[] args) {
@@ -24,25 +37,22 @@ public class Main {
         //Initialize the reader from system input
         reader = new Scanner(System.in);
 
-        //Initialize the set of valid parties
-        validParties = new HashSet<Party>() {{
-            try {
-                add(new Party("Cs"));
-                add(new Party("JxCAT"));
-                add(new Party("ERC"));
-                add(new Party("PSC"));
-                add(new Party("COMÚ PODEM"));
-                add(new Party("CUP"));
-                add(new Party("PP"));
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }};
-
         //Initialize VotingKiosk instance
         votingKiosk = new VotingKiosk(){
             public Set<Party> getPartiesFromDB(){
-                return validParties;
+                return new HashSet<Party>() {{
+                    try {
+                        add(new Party("Cs"));
+                        add(new Party("JxCAT"));
+                        add(new Party("ERC"));
+                        add(new Party("PSC"));
+                        add(new Party("COMÚ PODEM"));
+                        add(new Party("CUP"));
+                        add(new Party("PP"));
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }};
             }
         };
 
@@ -182,14 +192,14 @@ public class Main {
 
             try {
                 System.out.println("We are going to start by scanning your face, put your face near the camera.");
-                BiometricFacial faceScanned = new BiometricFacial(new byte[32]);
+                BiometricFacial faceScanned = new BiometricFacial(FACE_NUMBER_SCANNED);
                 Thread.sleep(3000);
                 System.out.println("Great, now we are going to scan your fingerprints, place your index finger from right hand.");
-                BiometricFingerPrint fingerPrintScanned = new BiometricFingerPrint(new byte[32]);
+                BiometricFingerPrint fingerPrintScanned = new BiometricFingerPrint(FINGER_NUMBER_SCANNED);
                 dataScanned = new BiometricData(faceScanned, fingerPrintScanned);
                 Thread.sleep(3000);
                 System.out.println("Great! Please, enter your passport.");
-                dataRead = ((BiometricReader) () -> new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32]))).readBiometricData();
+                dataRead = ((BiometricReader) () -> new BiometricData(new BiometricFacial(FACE_NUMBER_PASSPORT), new BiometricFingerPrint(FINGER_NUMBER_PASSPORT))).readBiometricData();
                 Thread.sleep(3000);
                 System.out.println("Your BiometricData has been sucessfully read from your passport.");
             } catch (NotValidBiometricFingerPrintException | NotValidBiometricFacialException | NotValidBiometricDataException | InterruptedException e) {
@@ -197,12 +207,12 @@ public class Main {
                 return;
             }
 
-            if (!dataRead.equals(dataScanned))
+            if (!areBigIntegersSimilar(dataRead.getBioFacial().getNumber(), dataScanned.getBioFacial().getNumber()) || !areBigIntegersSimilar(dataRead.getBioFingerPrint().getNumber(), dataScanned.getBioFingerPrint().getNumber()))
                 throw new BiometricVerificationFailedException();
 
             System.out.println("Everything is OK.");
 
-        }) {
+        }, getManualVerificationProcess()) {
             @Override
             public Nif getNifFromPassport() throws NotValidNifException {
                 return new Nif("12345678A");
@@ -212,7 +222,7 @@ public class Main {
 
     private static void displayValidParties() {
         System.out.println("List of Valid Parties: ");
-        validParties.forEach(v -> System.out.println("\t" + v.getName()));
+        votingKiosk.getPartiesFromVoteCounter().forEach(v -> System.out.println("\t" + v.getName()));
         System.out.println();
     }
 

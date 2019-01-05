@@ -10,7 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.BigMaths.areBigIntegersSimilar;
 
 class BiometricDataTest {
 
@@ -18,12 +21,12 @@ class BiometricDataTest {
 
         @Override
         public BiometricFacial scanFace() throws NotValidBiometricFacialException {
-            return new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4});
+            return new BiometricFacial(new BigInteger("12345"));
         }
 
         @Override
         public BiometricFingerPrint scanFingerPrint() throws NotValidBiometricFingerPrintException {
-            return new BiometricFingerPrint(new byte[]{10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13});
+            return new BiometricFingerPrint(new BigInteger("54321"));
         }
     }
 
@@ -35,11 +38,11 @@ class BiometricDataTest {
         }
 
         private BiometricFacial readFacialFromPassport() throws NotValidBiometricFacialException {
-            return new BiometricFacial(new byte[32]);
+            return new BiometricFacial(new BigInteger("12354"));
         }
 
         private BiometricFingerPrint readFingerPrintFromPassport() throws NotValidBiometricFingerPrintException {
-            return new BiometricFingerPrint(new byte[32]);
+            return new BiometricFingerPrint(new BigInteger("54312"));
         }
     }
 
@@ -48,14 +51,14 @@ class BiometricDataTest {
         private BiometricData passportData;
         private BiometricData scannedData;
 
-        public BiometricSoftwareTest(BiometricData passport, BiometricData scanned) {
+        BiometricSoftwareTest(BiometricData passport, BiometricData scanned) {
             this.passportData = passport;
             this.scannedData = scanned;
         }
 
         @Override
         public void verifyBiometricData() throws BiometricVerificationFailedException {
-            if (!this.passportData.equals(this.scannedData))
+            if (!areBigIntegersSimilar(passportData.getBioFacial().getNumber(), scannedData.getBioFacial().getNumber()) || !areBigIntegersSimilar(passportData.getBioFingerPrint().getNumber(), scannedData.getBioFingerPrint().getNumber()))
                 throw new BiometricVerificationFailedException();
         }
     }
@@ -71,28 +74,13 @@ class BiometricDataTest {
     }
 
     @Test
-    @DisplayName("BiometricFacial is 32 bytes")
-    void biometricFacial32bytes() {
-        assertThrows(NotValidBiometricFacialException.class, () -> new BiometricFacial(new byte[]{1, 2, 3, 4}));
-    }
-
-    @Test
-    @DisplayName("BiometricFingerPrint is 32 bytes")
-    void biometricFingerPrint32bytes() {
-        assertThrows(NotValidBiometricFingerPrintException.class, () -> new BiometricFingerPrint(new byte[]{1, 2, 3, 4}));
-    }
-
-    @Test
     @DisplayName("Scanning User")
     void scannerTest() {
         try {
             BiometricData dataScanned = new BiometricData(bscan.scanFace(), bscan.scanFingerPrint());
 
-            assertEquals(dataScanned, new BiometricData(new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4}),
-                    new BiometricFingerPrint(new byte[]{10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13, 10, 11, 12, 13})
-            ));
-
-            assertNotEquals(dataScanned, new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32])));
+            assertEquals(new BiometricData(new BiometricFacial(new BigInteger("12345")), new BiometricFingerPrint(new BigInteger("54321"))), dataScanned);
+            assertNotEquals(new BiometricData(new BiometricFacial(new BigInteger("0")), new BiometricFingerPrint(new BigInteger("0"))), dataScanned);
         } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
             fail();
         }
@@ -103,10 +91,10 @@ class BiometricDataTest {
     @DisplayName("Reading Password")
     void readPasswordTest() {
         try {
-            BiometricData dataReaded = bread.readBiometricData();
+            BiometricData dataRead = bread.readBiometricData();
 
-            assertEquals(dataReaded, new BiometricData(new BiometricFacial(new byte[32]), new BiometricFingerPrint(new byte[32])));
-            assertNotEquals(dataReaded, new BiometricData(new BiometricFacial(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4}), new BiometricFingerPrint(new byte[]{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4})));
+            assertEquals(new BiometricData(new BiometricFacial(new BigInteger("12354")), new BiometricFingerPrint(new BigInteger("54312"))), dataRead);
+            assertNotEquals(new BiometricData(new BiometricFacial(new BigInteger("0")), new BiometricFingerPrint(new BigInteger("0"))), dataRead);
         } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
             fail();
         }
@@ -117,6 +105,9 @@ class BiometricDataTest {
     void verificationTest() {
         try {
             this.bsoft = new BiometricSoftwareTest(new BiometricData(bscan.scanFace(), bscan.scanFingerPrint()), bread.readBiometricData());
+            assertDoesNotThrow(() -> bsoft.verifyBiometricData());
+
+            this.bsoft = new BiometricSoftwareTest(new BiometricData(bscan.scanFace(), bscan.scanFingerPrint()), new BiometricData(new BiometricFacial(new BigInteger("0")), new BiometricFingerPrint(new BigInteger("0"))));
             assertThrows(BiometricVerificationFailedException.class, () -> bsoft.verifyBiometricData());
         } catch (NotValidBiometricFacialException | NotValidBiometricFingerPrintException | NotValidBiometricDataException bfe) {
             fail();

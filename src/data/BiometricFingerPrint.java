@@ -3,20 +3,21 @@ package data;
 import exceptions.NotValidBiometricFingerPrintException;
 import utils.DataTypeConverter;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 
 public final class BiometricFingerPrint {
 
-    private final byte[] bioFingerPrint;
+    private final BigInteger bioFingerPrint;
 
-    public BiometricFingerPrint(byte[] bioFingerPrint) throws NotValidBiometricFingerPrintException {
-        if(bioFingerPrint == null || bioFingerPrint.length != 32)
+    public BiometricFingerPrint(BigInteger bioFingerPrint) throws NotValidBiometricFingerPrintException {
+        if(bioFingerPrint == null)
             throw new NotValidBiometricFingerPrintException();
 
         this.bioFingerPrint = bioFingerPrint;
     }
 
-    public byte[] getBioFingerPrint() {
+    public BigInteger getNumber() {
         return bioFingerPrint;
     }
 
@@ -27,16 +28,16 @@ public final class BiometricFingerPrint {
         if (o == null || getClass() != o.getClass())
             return false;
         BiometricFingerPrint biometricFingerPrint = (BiometricFingerPrint) o;
-        return Arrays.equals(bioFingerPrint, biometricFingerPrint.bioFingerPrint);
+        return bioFingerPrint.equals(biometricFingerPrint.bioFingerPrint);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(bioFingerPrint);
+        return bioFingerPrint.hashCode();
     }
 
     @Override
     public String toString() {
-        return "BiometricFingerPrint{" + "bioFingerPrint='" + DataTypeConverter.bytesToHex(bioFingerPrint) + '\'' + '}';
+        return "BiometricFingerPrint{" + "bioFingerPrint='" + bioFingerPrint.toString() + '\'' + '}';
     }
 }

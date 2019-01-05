@@ -12,6 +12,4 @@ public class DataTypeConverter {
         }
         return new String(hexChars);
     }
-
-
 }

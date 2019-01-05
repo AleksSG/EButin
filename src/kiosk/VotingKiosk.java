@@ -92,5 +92,10 @@ public class VotingKiosk {
     public Set<Party> getPartiesFromDB(){
         return null;
     }
+    public Set<Party> getPartiesFromVoteCounter() {
+        if(voteCounter != null)
+            return voteCounter.getValidParties();
+        return getPartiesFromDB();
+    }
 
 }
