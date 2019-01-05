@@ -18,9 +18,9 @@ public class Main {
     private static final int VALID_STAFF_ID = 23;
     private static final String VALID_STAFF_PASSWORD = "root";
 
-    //Uncomment this one and comment next in order to fail the biometric method and start the alternative (manual method).
-    //private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766");
-    private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766");
+    //Uncomment/Comment those in order to fail/success the biometric method and start the alternative (manual method).
+    private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("42332421478654387653826348236023875602365023874967948365348765348766"); //fails
+    //private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766"); //success
 
     private static final BigInteger FINGER_NUMBER_SCANNED = new BigInteger("43534534634534348765398642084762370856342875647353784650347453485348");
     private static final BigInteger FACE_NUMBER_PASSPORT = new BigInteger("12332074637085634950873632074650748365038465940984873504736348734853");
@@ -210,6 +210,11 @@ public class Main {
             System.out.println("Everything is OK.");
 
         }, getManualVerificationProcess()) {
+            @Override
+            public void showMessageAlternativeStarted() {
+                System.out.println("Oops, your biometric data seems not to match. An alternative method is launched...");
+            }
+
             @Override
             public Nif getNifFromPassport() throws NotValidNifException {
                 return new Nif("12345678A");

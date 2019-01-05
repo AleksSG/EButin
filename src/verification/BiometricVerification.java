@@ -28,12 +28,19 @@ public class BiometricVerification implements IdentityVerify {
         } catch (BiometricVerificationFailedException e) {
             if(alternative == null)
                 throw new VerificationIdentityFailedException(e.getMessage());
+            showMessageAlternativeStarted();
             return alternative.getNif();
         } catch (NotValidNifException e) {
             if(alternative == null)
                 throw new VerificationIdentityFailedException("Couldn't read the Nif from Passport");
+            showMessageAlternativeStarted();
             return alternative.getNif();
         }
+    }
+
+
+    public void showMessageAlternativeStarted() {
+
     }
 
     public Nif getNifFromPassport() throws NotValidNifException {
