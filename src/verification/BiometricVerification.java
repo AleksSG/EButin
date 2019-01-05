@@ -22,20 +22,17 @@ public class BiometricVerification implements IdentityVerify {
 
         try {
             software.verifyBiometricData();
-
             return getNifFromPassport();
-
         } catch (BiometricVerificationFailedException e) {
             if(alternative == null)
                 throw new VerificationIdentityFailedException(e.getMessage());
-            showMessageAlternativeStarted();
-            return alternative.getNif();
         } catch (NotValidNifException e) {
             if(alternative == null)
                 throw new VerificationIdentityFailedException("Couldn't read the Nif from Passport");
-            showMessageAlternativeStarted();
-            return alternative.getNif();
         }
+
+        showMessageAlternativeStarted();
+        return alternative.getNif();
     }
 
 
