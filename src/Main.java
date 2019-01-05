@@ -1,15 +1,12 @@
 import biometric.BiometricReader;
-import biometric.BiometricSoftware;
 import data.*;
 import exceptions.*;
 import kiosk.VotingKiosk;
 import services.ElectoralOrganism;
-import utils.BigMaths;
 import verification.BiometricVerification;
 import verification.IdentityVerify;
 import verification.ManualVerification;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Scanner;
