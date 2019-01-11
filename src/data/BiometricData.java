@@ -1,16 +1,17 @@
 package data;
 
-import exceptions.NotValidBiometricDataException;
-import utils.DataTypeConverter;
+import exceptions.data.NotValidBiometricDataException;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 
 public final class BiometricData {
 
-    private final BiometricFacial bioFacial;
-    private final BiometricFingerPrint bioFingerPrint;
+    private final BigInteger bioFacial;
+    private final BigInteger bioFingerPrint;
 
-    public BiometricData(BiometricFacial bioFacial, BiometricFingerPrint bioFingerPrint) throws NotValidBiometricDataException {
+    public BiometricData(BigInteger bioFacial, BigInteger bioFingerPrint) throws NotValidBiometricDataException {
         if(bioFacial == null || bioFingerPrint == null)
             throw new NotValidBiometricDataException();
 
@@ -18,11 +19,26 @@ public final class BiometricData {
         this.bioFingerPrint = bioFingerPrint;
     }
 
-    public BiometricFacial getBioFacial() {
+    public boolean isNotSimilarTo(BiometricData biometricData) {
+        return areNotBigIntegersSimilar(bioFacial, biometricData.bioFacial) || areNotBigIntegersSimilar(bioFingerPrint, biometricData.bioFingerPrint);
+    }
+
+    private static BigDecimal getPercentIncreaseBetween(BigInteger from, BigInteger value) {
+        BigDecimal decimalPassport = new BigDecimal(from);
+        BigDecimal decimalScanned = new BigDecimal(value);
+
+        return decimalScanned.subtract(decimalPassport).abs().divide(decimalPassport, 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100"));
+    }
+
+    private static boolean areNotBigIntegersSimilar(BigInteger from, BigInteger value) {
+        return getPercentIncreaseBetween(from, value).compareTo(BigDecimal.ONE) >= 1;
+    }
+
+    public BigInteger getBioFacial() {
         return bioFacial;
     }
 
-    public BiometricFingerPrint getBioFingerPrint() {
+    public BigInteger getBioFingerPrint() {
         return bioFingerPrint;
     }
 

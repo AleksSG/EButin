@@ -3,6 +3,7 @@ package verification;
 import biometric.BiometricSoftware;
 import data.Nif;
 import exceptions.*;
+import exceptions.data.NotValidNifException;
 
 public class BiometricVerification implements IdentityVerify {
 

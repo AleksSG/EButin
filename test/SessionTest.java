@@ -1,8 +1,8 @@
 import data.DigitalSignature;
 import data.Nif;
 import exceptions.HasNotVotedException;
-import exceptions.NotValidDigitalSignatureException;
-import exceptions.NotValidNifException;
+import exceptions.data.NotValidDigitalSignatureException;
+import exceptions.data.NotValidNifException;
 import exceptions.VerificationIdentityFailedException;
 import kiosk.Session;
 import org.junit.jupiter.api.Assertions;

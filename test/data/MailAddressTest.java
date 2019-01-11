@@ -1,5 +1,6 @@
-import data.MailAddress;
-import exceptions.NotValidMailException;
+package data;
+
+import exceptions.data.NotValidMailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

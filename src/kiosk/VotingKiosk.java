@@ -3,6 +3,7 @@ package kiosk;
 import data.MailAddress;
 import data.Party;
 import exceptions.*;
+import exceptions.data.NotValidDigitalSignatureException;
 import services.ElectoralOrganism;
 import services.MailerService;
 import verification.IdentityVerify;
@@ -36,17 +37,11 @@ public class VotingKiosk {
         }
     }
 
-    public void setElectoralOrganism(ElectoralOrganism eO) throws ElectoralOrgAlreadySetException {
-        if(elecOrg != null)
-            throw new ElectoralOrgAlreadySetException();
-
+    public void setElectoralOrganism(ElectoralOrganism eO) {
         this.elecOrg = eO;
     }
 
-    public void setMailerService(MailerService mService) throws MailerServiceAlreadySetException {
-        if(this.mService != null)
-            throw new MailerServiceAlreadySetException();
-
+    public void setMailerService(MailerService mService) {
         this.mService = mService;
     }
 

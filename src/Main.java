@@ -1,6 +1,7 @@
 import biometric.BiometricReader;
 import data.*;
 import exceptions.*;
+import exceptions.data.*;
 import kiosk.VotingKiosk;
 import services.ElectoralOrganism;
 import verification.BiometricVerification;
@@ -11,8 +12,6 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-
-import static utils.BigMaths.areBigIntegersSimilar;
 
 public class Main {
     private static final int VALID_STAFF_ID = 23;
@@ -53,40 +52,30 @@ public class Main {
             }
         };
 
-        try {
-            votingKiosk.setElectoralOrganism(new ElectoralOrganism() {
-                @Override
-                public boolean canVote(Nif nif) {
-                    return true;
+        votingKiosk.setElectoralOrganism(new ElectoralOrganism() {
+            @Override
+            public boolean canVote(Nif nif) {
+                return true;
+            }
+
+            @Override
+            public void disableVoter(Nif nif) {
+
+            }
+
+            @Override
+            public DigitalSignature askForDigitalSignature(Party party) {
+                DigitalSignature digitalSignature = null;
+                try {
+                    digitalSignature = new DigitalSignature(new byte[32]);
+                } catch (NotValidDigitalSignatureException e) {
+                    e.printStackTrace();
                 }
+                return digitalSignature;
+            }
+        });
 
-                @Override
-                public void disableVoter(Nif nif) {
-
-                }
-
-                @Override
-                public DigitalSignature askForDigitalSignature(Party party) {
-                    DigitalSignature digitalSignature = null;
-                    try {
-                        digitalSignature = new DigitalSignature(new byte[32]);
-                    } catch (NotValidDigitalSignatureException e) {
-                        e.printStackTrace();
-                    }
-                    return digitalSignature;
-                }
-            });
-        } catch (ElectoralOrgAlreadySetException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        try {
-            votingKiosk.setMailerService((address, signature) -> System.out.println("A mail has been sent to " + address.getMail()));
-        } catch (MailerServiceAlreadySetException e) {
-            e.printStackTrace();
-            return;
-        }
+        votingKiosk.setMailerService((address, signature) -> System.out.println("A mail has been sent to " + address.getMail()));
 
         System.out.print("Write 'start' in order to start a voting process: ");
         while(reader.nextLine().equals("start")) {
@@ -189,22 +178,22 @@ public class Main {
 
             try {
                 System.out.println("We are going to start by scanning your face, put your face near the camera.");
-                BiometricFacial faceScanned = new BiometricFacial(FACE_NUMBER_SCANNED);
                 Thread.sleep(3000);
                 System.out.println("Great, now we are going to scan your fingerprints, place your index finger from right hand.");
-                BiometricFingerPrint fingerPrintScanned = new BiometricFingerPrint(FINGER_NUMBER_SCANNED);
-                dataScanned = new BiometricData(faceScanned, fingerPrintScanned);
                 Thread.sleep(3000);
+
+                dataScanned = new BiometricData(FACE_NUMBER_SCANNED, FINGER_NUMBER_SCANNED);
+
                 System.out.println("Great! Please, enter your passport.");
-                dataRead = ((BiometricReader) () -> new BiometricData(new BiometricFacial(FACE_NUMBER_PASSPORT), new BiometricFingerPrint(FINGER_NUMBER_PASSPORT))).readBiometricData();
+                dataRead = ((BiometricReader) () -> new BiometricData(FACE_NUMBER_PASSPORT, FINGER_NUMBER_PASSPORT)).readBiometricData();
                 Thread.sleep(3000);
                 System.out.println("Your BiometricData has been sucessfully read from your passport.");
-            } catch (NotValidBiometricFingerPrintException | NotValidBiometricFacialException | NotValidBiometricDataException | InterruptedException e) {
+            } catch (InterruptedException | NotValidBiometricDataException e) {
                 e.printStackTrace();
-                return;
+                throw new BiometricVerificationFailedException();
             }
 
-            if (!areBigIntegersSimilar(dataRead.getBioFacial().getNumber(), dataScanned.getBioFacial().getNumber()) || !areBigIntegersSimilar(dataRead.getBioFingerPrint().getNumber(), dataScanned.getBioFingerPrint().getNumber()))
+            if (dataRead.isNotSimilarTo(dataScanned))
                 throw new BiometricVerificationFailedException();
 
             System.out.println("Everything is OK.");

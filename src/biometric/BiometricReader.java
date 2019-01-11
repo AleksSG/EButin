@@ -1,10 +1,8 @@
 package biometric;
 
 import data.BiometricData;
-import exceptions.NotValidBiometricDataException;
-import exceptions.NotValidBiometricFacialException;
-import exceptions.NotValidBiometricFingerPrintException;
+import exceptions.data.NotValidBiometricDataException;
 
 public interface BiometricReader {
-    public BiometricData readBiometricData() throws NotValidBiometricFingerPrintException, NotValidBiometricFacialException, NotValidBiometricDataException;
+    BiometricData readBiometricData() throws NotValidBiometricDataException;
 }

@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.NotValidNifException;
+import exceptions.data.NotValidNifException;
 
 public final class Nif {
     private final String nif;

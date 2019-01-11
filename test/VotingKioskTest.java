@@ -3,6 +3,10 @@ import data.MailAddress;
 import data.Nif;
 import data.Party;
 import exceptions.*;
+import exceptions.data.NotValidDigitalSignatureException;
+import exceptions.data.NotValidMailException;
+import exceptions.data.NotValidNifException;
+import exceptions.data.NotValidPartyException;
 import kiosk.VotingKiosk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -130,18 +134,6 @@ class VotingKioskTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
-    }
-
-    @Test
-    @DisplayName("setElectoralOrganismTest")
-    void setElectoralOrganismTest() {
-        assertThrows(ElectoralOrgAlreadySetException.class, () -> votingKiosk.setElectoralOrganism(teo));
-    }
-
-    @Test
-    @DisplayName("setMailerServiceTest")
-    void setMailerServiceTest() {
-        assertThrows(MailerServiceAlreadySetException.class, () -> votingKiosk.setMailerService(mst));
     }
 
     @Test

@@ -1,7 +1,6 @@
 package services;
 
 import data.*;
-import exceptions.NotValidDigitalSignatureException;
 
 public interface ElectoralOrganism {
     boolean canVote(Nif nif);
