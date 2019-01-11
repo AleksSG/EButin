@@ -4,8 +4,10 @@ import data.MailAddress;
 import data.Party;
 import exceptions.*;
 import exceptions.data.NotValidDigitalSignatureException;
+import implementations.PartiesDBImplementation;
 import services.ElectoralOrganism;
 import services.MailerService;
+import services.PartiesDB;
 import verification.IdentityVerify;
 
 import java.util.Set;
@@ -15,11 +17,14 @@ public class VotingKiosk {
 
     private ElectoralOrganism elecOrg;
     private MailerService mService;
+    private PartiesDB pdb;
 
     private VoteCounter voteCounter;
     private Session session;
 
+
     public VotingKiosk() {
+        this.pdb = new PartiesDBImplementation();
         this.elecOrg = null;
         this.mService = null;
         this.session = null;
@@ -30,9 +35,9 @@ public class VotingKiosk {
         try {
             //get parties from an internal/external database
             //a default one has been put instead, modify getPartiesFromDB in order to add the one needed.
-            this.voteCounter = new VoteCounter(getPartiesFromDB());
+            this.voteCounter = new VoteCounter(pdb.getPartiesFromDB());
         }
-        catch(Exception e) {
+        catch(NoConnectionToDBException | NotValidSetOfPartiesException e) {
             e.printStackTrace();
         }
     }

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.ElectoralOrganism;
 import services.MailerService;
+import services.PartiesDB;
 import verification.ManualVerification;
 import verification.IdentityVerify;
 
@@ -23,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VotingKioskTest {
 
-    private static class ManualVerificationCorrectDouble extends ManualVerification {
 
+    private static class ManualVerificationCorrectStub extends ManualVerification {
         @Override
         public boolean logInSupportStaff() {
             //First time login successfull
@@ -37,51 +38,41 @@ class VotingKioskTest {
         }
     }
 
-    private static class VotingKioskDouble extends VotingKiosk {
+    /*
+    private static class NoConnectivityToPartyDB implements PartiesDB {
         @Override
-        public Set<Party> getPartiesFromDB() {
-            Set<Party> partySet = new HashSet<>();
-
-            try {
-                partySet.add(new Party("PP"));
-                partySet.add(new Party("PSC"));
-                partySet.add(new Party("Cs"));
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-
-            return partySet;
+        public Set<Party> getPartiesFromDB() throws NoConnectionToDBException{
+            throw new NoConnectionToDBException();
         }
     }
 
-    private static class TestElectoralOrganism implements ElectoralOrganism {
-
-        private HashSet<Nif> canVoteNif;
-
-        TestElectoralOrganism() {
-            try {
-                createSet();
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
+    private static class CorrectConnectToPartyDB implements PartiesDB {
+        @Override
+        public Set<Party> getPartiesFromDB() throws NoConnectionToDBException{
+            return new HashSet<Party>() {{
+                try {
+                    add(new Party("PP"));
+                    add(new Party("PSC"));
+                    add(new Party("Cs"));
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }};
         }
+    }*/
+
+    private static class TestElectoralOrganism implements ElectoralOrganism {
+        boolean canVote = true;
 
         @Override
         public boolean canVote(Nif nif) {
-            return canVoteNif.contains(nif);
+            return canVote;
         }
 
         @Override
         public void disableVoter(Nif nif) {
-            canVoteNif.remove(nif);
-        }
-
-        private void createSet() throws NotValidNifException {
-            canVoteNif = new HashSet<>();
-            canVoteNif.add(new Nif("12345678A"));
-            canVoteNif.add(new Nif("A1234567A"));
+            this.canVote = false;
         }
 
         @Override
@@ -101,43 +92,40 @@ class VotingKioskTest {
     }
 
     private static class TestMailerService implements MailerService {
-        private boolean emailSend = false;
+        public boolean emailSend = false;
         @Override
         public void send(MailAddress address, DigitalSignature signature) {
             this.emailSend = true;
-        }
-
-        boolean isSend(){
-            return this.emailSend;
         }
     }
 
     private VotingKiosk votingKiosk;
     private ElectoralOrganism teo;
     private TestMailerService mst;
+    //private PartiesDB pdb;
     private IdentityVerify identityVerify;
     private MailAddress mailAddress;
     private Party party;
 
     @BeforeEach
     void setUp() {
-        votingKiosk = new VotingKioskDouble();
+        votingKiosk = new VotingKiosk();
         teo = new TestElectoralOrganism();
         mst = new TestMailerService();
 
         try {
-            identityVerify = new ManualVerificationCorrectDouble();
+            identityVerify = new ManualVerificationCorrectStub();
             mailAddress = new MailAddress("blabla@gmail.com");
-            party = new Party("PP");
             votingKiosk.setElectoralOrganism(teo);
             votingKiosk.setMailerService(mst);
+            party = new Party("PP");
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    @DisplayName("startSessionTest")
+    @DisplayName("Start Session Test")
     void startSessionTest() {
         assertThrows(VerificationIdentityFailedException.class, () -> votingKiosk.startSession(null));
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
@@ -145,15 +133,25 @@ class VotingKioskTest {
     }
 
     @Test
-    @DisplayName("closeSessionTest")
+    @DisplayName("Close Session Test")
     void closeSessionTest() {
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.closeSession());
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertDoesNotThrow(() -> votingKiosk.closeSession());
     }
 
+    /*
+    @Test
+    @DisplayName("Cannot connect to the DB Exception")
+    void cantConnectDBTest() {
+        pdb = new NoConnectivityToPartyDB();
+        assertThrows(NoConnectionToDBException.class, () -> pdb.getPartiesFromDB());
+    }
+    */
     @Test
     void voteTest() {
+        //pdb = new CorrectConnectToPartyDB();
+
         assertThrows(NullPointerException.class, () -> votingKiosk.vote(null));
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.vote(party));
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
@@ -175,8 +173,6 @@ class VotingKioskTest {
     void ElectoralOrganismTesting() {
         try {
             assertTrue(teo.canVote(new Nif("12345678A")), "Valid NIF can vote");
-            assertFalse(teo.canVote(new Nif("23456789A")), "Valid NIF cannot vote");
-
             teo.disableVoter(new Nif("12345678A"));
             assertFalse(teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
 
@@ -191,7 +187,7 @@ class VotingKioskTest {
     void MailerServiceTest() {
         try {
             mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[32]));
-            assertTrue(mst.isSend(), "Check if send");
+            assertTrue(mst.emailSend, "Check if send");
         } catch (NotValidDigitalSignatureException | NotValidMailException e) {
             fail();
         }
