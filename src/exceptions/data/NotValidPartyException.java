@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.data;
 
 public class NotValidPartyException extends Exception {
     public NotValidPartyException(){

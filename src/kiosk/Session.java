@@ -3,7 +3,7 @@ package kiosk;
 import data.DigitalSignature;
 import data.Nif;
 import exceptions.HasNotVotedException;
-import exceptions.NotValidDigitalSignatureException;
+import exceptions.data.NotValidDigitalSignatureException;
 import exceptions.VerificationIdentityFailedException;
 import verification.IdentityVerify;
 

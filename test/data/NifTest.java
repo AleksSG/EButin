@@ -1,5 +1,6 @@
-import data.Nif;
-import exceptions.NotValidNifException;
+package data;
+
+import exceptions.data.NotValidNifException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.fail;

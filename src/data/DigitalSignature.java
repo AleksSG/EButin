@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.NotValidDigitalSignatureException;
+import exceptions.data.NotValidDigitalSignatureException;
 import utils.DataTypeConverter;
 
 import java.util.Arrays;

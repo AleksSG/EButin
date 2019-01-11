@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.NotValidPartyException;
+import exceptions.data.NotValidPartyException;
 
 public final class Party {
     private final String name;

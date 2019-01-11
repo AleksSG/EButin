@@ -1,11 +1,8 @@
 package biometric;
 
-import data.BiometricFacial;
-import data.BiometricFingerPrint;
-import exceptions.NotValidBiometricFacialException;
-import exceptions.NotValidBiometricFingerPrintException;
+import java.math.BigInteger;
 
 public interface BiometricScanner {
-    public BiometricFacial scanFace() throws NotValidBiometricFacialException;
-    public BiometricFingerPrint scanFingerPrint() throws NotValidBiometricFingerPrintException;
+    BigInteger scanFace();
+    BigInteger scanFingerPrint();
 }

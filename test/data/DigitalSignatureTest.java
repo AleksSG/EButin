@@ -1,5 +1,6 @@
-import data.DigitalSignature;
-import exceptions.NotValidDigitalSignatureException;
+package data;
+
+import exceptions.data.NotValidDigitalSignatureException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

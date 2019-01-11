@@ -1,7 +1,7 @@
 package verification;
 
 import data.Nif;
-import exceptions.NotValidNifException;
+import exceptions.data.NotValidNifException;
 import exceptions.VerificationIdentityFailedException;
 
 public class ManualVerification implements IdentityVerify {

@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.data;
 
 public class NotValidMailException extends Exception {
     public NotValidMailException(){

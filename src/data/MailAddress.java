@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.NotValidMailException;
+import exceptions.data.NotValidMailException;
 
 public final class MailAddress {
     private final String mail;
