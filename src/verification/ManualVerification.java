@@ -1,15 +1,23 @@
 package verification;
 
 import data.Nif;
-import exceptions.data.NotValidNifException;
 import exceptions.VerificationIdentityFailedException;
+import exceptions.data.NotValidNifException;
+
+import java.util.Scanner;
 
 public class ManualVerification implements IdentityVerify {
 
     private int attempts;
+    private Scanner scanner;
+    private int validStaffId;
+    private String passwd;
 
-    public ManualVerification() {
+    public ManualVerification(Scanner scanner, int validStaffId, String passwd) {
+        this.scanner = scanner;
         attempts = 0;
+        this.validStaffId = validStaffId;
+        this.passwd = passwd;
     }
 
     @Override
@@ -18,7 +26,8 @@ public class ManualVerification implements IdentityVerify {
             throw new VerificationIdentityFailedException("The support staff member failed 3 times at logging in.");
 
         try {
-            return getManualNif();
+            System.out.println("Write down the NIF verified: ");
+            return new Nif(scanner.nextLine());
         }
         catch (NotValidNifException e) {
             throw new VerificationIdentityFailedException("The support staff member introduced a not valid NIF.");
@@ -34,13 +43,15 @@ public class ManualVerification implements IdentityVerify {
     }
 
     public boolean logInSupportStaff() {
-        //TO-DO || Implemment an screen to make support staff member log in.
+        System.out.println("A support staff member will verify your identity.");
+        System.out.println("Please, wait until he or she comes.");
+        scanner.nextLine();
+        System.out.print("[userId]: ");
+        int staffMemberId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("[password]: ");
+        String staffMemberPassword = scanner.nextLine();
 
-        return false;
-    }
-
-    public Nif getManualNif() throws NotValidNifException {
-        //TO-DO || Implemment an screen to make the logged support staff member to write the Nif.
-        throw new NotValidNifException("Nif wrong");
+        return staffMemberId == validStaffId && staffMemberPassword.equals(passwd);
     }
 }

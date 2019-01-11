@@ -2,34 +2,32 @@ package verification;
 
 import biometric.BiometricSoftware;
 import data.Nif;
-import exceptions.*;
-import exceptions.data.NotValidNifException;
+import exceptions.BiometricVerificationFailedException;
+import exceptions.VerificationIdentityFailedException;
 
 public class BiometricVerification implements IdentityVerify {
 
+    private Nif nifReadFromPassport;
     private BiometricSoftware software;
     private IdentityVerify alternative;
 
-    public BiometricVerification(BiometricSoftware software, IdentityVerify alternative) {
-        if(software == null)
-            throw new NullPointerException("Parameter musnt't be null");
+    public BiometricVerification(Nif nifReadFromPassport, BiometricSoftware software, IdentityVerify alternative) {
+        if(nifReadFromPassport == null || software == null)
+            throw new NullPointerException("Nif and software parameters musnt't be null");
 
+        this.nifReadFromPassport = nifReadFromPassport;
         this.software = software;
         this.alternative = alternative;
     }
 
     @Override
     public Nif getNif() throws VerificationIdentityFailedException {
-
         try {
             software.verifyBiometricData();
-            return getNifFromPassport();
+            return nifReadFromPassport;
         } catch (BiometricVerificationFailedException e) {
-            if(alternative == null)
+            if (alternative == null)
                 throw new VerificationIdentityFailedException(e.getMessage());
-        } catch (NotValidNifException e) {
-            if(alternative == null)
-                throw new VerificationIdentityFailedException("Couldn't read the Nif from Passport");
         }
 
         showMessageAlternativeStarted();
@@ -37,12 +35,7 @@ public class BiometricVerification implements IdentityVerify {
     }
 
 
-    public void showMessageAlternativeStarted() {
-
-    }
-
-    public Nif getNifFromPassport() throws NotValidNifException {
-        //TO-DO Implemment a read from Passport function
-        throw new NotValidNifException("Nif wrong");
+    private void showMessageAlternativeStarted() {
+        System.out.println("Oops, your biometric data seems not to match. An alternative method is launched...");
     }
 }

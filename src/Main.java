@@ -1,4 +1,7 @@
 import biometric.BiometricReader;
+import biometric.BiometricReaderImplementation;
+import biometric.BiometricScannerImplementation;
+import biometric.BiometricSoftwareImplementation;
 import data.*;
 import exceptions.*;
 import exceptions.data.*;
@@ -17,6 +20,8 @@ public class Main {
     private static final int VALID_STAFF_ID = 23;
     private static final String VALID_STAFF_PASSWORD = "root";
 
+    private static final String NIF_READ_FROM_PASSPORT = "12345678A";
+
     //Uncomment/Comment those in order to fail/success the biometric method and start the alternative (manual method).
     private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("42332421478654387653826348236023875602365023874967948365348765348766"); //fails
     //private static final BigInteger FACE_NUMBER_SCANNED = new BigInteger("12332421478654387653826348236023875602365023874967948365348765348766"); //success
@@ -25,13 +30,13 @@ public class Main {
     private static final BigInteger FACE_NUMBER_PASSPORT = new BigInteger("12332074637085634950873632074650748365038465940984873504736348734853");
     private static final BigInteger FINGER_NUMBER_PASSPORT = new BigInteger("43537860843765048730856278068047362084726478623580635748658473620831");
 
-    private static Scanner reader;
+    private static Scanner scanner;
     private static VotingKiosk votingKiosk;
 
     public static void main(String[] args) {
 
         //Initialize the reader from system input
-        reader = new Scanner(System.in);
+        scanner = new Scanner(System.in);
 
         //Initialize VotingKiosk instance
         votingKiosk = new VotingKiosk(){
@@ -78,7 +83,7 @@ public class Main {
         votingKiosk.setMailerService((address, signature) -> System.out.println("A mail has been sent to " + address.getMail()));
 
         System.out.print("Write 'start' in order to start a voting process: ");
-        while(reader.nextLine().equals("start")) {
+        while(scanner.nextLine().equals("start")) {
             System.out.println("[VotingProcess] START\n");
             votingProcess();
             System.out.println("\n[VotingProcess] END");
@@ -144,71 +149,25 @@ public class Main {
     private static boolean askForConsent() {
         System.out.print("Do you want to give us your consent about using your Passport Biometric Data? (Y/N): ");
 
-        return reader.nextLine().toLowerCase().equals("y");
+        return scanner.nextLine().toLowerCase().equals("y");
     }
 
     private static ManualVerification getManualVerificationProcess() {
-        return new ManualVerification() {
-            @Override
-            public boolean logInSupportStaff() {
-                System.out.println("A support staff member will verify your identity.");
-                System.out.println("Please, wait until he or she comes.");
-                reader.nextLine();
-                System.out.print("[userId]: ");
-                int staffMemberId = reader.nextInt();
-                reader.nextLine();
-                System.out.print("[password]: ");
-                String staffMemberPassword = reader.nextLine();
-
-                return staffMemberId == VALID_STAFF_ID && staffMemberPassword.equals(VALID_STAFF_PASSWORD);
-            }
-
-            @Override
-            public Nif getManualNif() throws NotValidNifException {
-                System.out.println("Write down the NIF verified: ");
-                return new Nif(reader.nextLine());
-            }
-        };
+        return new ManualVerification(scanner, VALID_STAFF_ID, VALID_STAFF_PASSWORD);
     }
 
     private static BiometricVerification getBiometricVerificationProcess() {
-        return new BiometricVerification(() -> {
-            BiometricData dataScanned;
-            BiometricData dataRead;
+        Nif nif = null;
+        BiometricData dataRead = null;
 
-            try {
-                System.out.println("We are going to start by scanning your face, put your face near the camera.");
-                Thread.sleep(3000);
-                System.out.println("Great, now we are going to scan your fingerprints, place your index finger from right hand.");
-                Thread.sleep(3000);
+        try {
+            nif = new Nif(NIF_READ_FROM_PASSPORT);
+            dataRead = new BiometricData(FACE_NUMBER_PASSPORT, FINGER_NUMBER_PASSPORT);
+        } catch (NotValidNifException | NotValidBiometricDataException e) {
+            e.printStackTrace();
+        }
 
-                dataScanned = new BiometricData(FACE_NUMBER_SCANNED, FINGER_NUMBER_SCANNED);
-
-                System.out.println("Great! Please, enter your passport.");
-                dataRead = ((BiometricReader) () -> new BiometricData(FACE_NUMBER_PASSPORT, FINGER_NUMBER_PASSPORT)).readBiometricData();
-                Thread.sleep(3000);
-                System.out.println("Your BiometricData has been sucessfully read from your passport.");
-            } catch (InterruptedException | NotValidBiometricDataException e) {
-                e.printStackTrace();
-                throw new BiometricVerificationFailedException();
-            }
-
-            if (dataRead.isNotSimilarTo(dataScanned))
-                throw new BiometricVerificationFailedException();
-
-            System.out.println("Everything is OK.");
-
-        }, getManualVerificationProcess()) {
-            @Override
-            public void showMessageAlternativeStarted() {
-                System.out.println("Oops, your biometric data seems not to match. An alternative method is launched...");
-            }
-
-            @Override
-            public Nif getNifFromPassport() throws NotValidNifException {
-                return new Nif("12345678A");
-            }
-        };
+        return new BiometricVerification(nif, new BiometricSoftwareImplementation(new BiometricReaderImplementation(dataRead), new BiometricScannerImplementation(FACE_NUMBER_SCANNED, FINGER_NUMBER_SCANNED)), getManualVerificationProcess());
     }
 
     private static void displayValidParties() {
@@ -221,9 +180,9 @@ public class Main {
         Party selectedParty = null;
         while(selectedParty == null) {
             System.out.print("Write down the name of the party you want to vote or press ENTER key to send a protest vote (is case sensitive): ");
-            String name = reader.nextLine();
+            String name = scanner.nextLine();
             System.out.print("Are you sure you want to vote " + name + "? (Y/N): ");
-            if(reader.nextLine().toLowerCase().equals("y")) {
+            if(scanner.nextLine().toLowerCase().equals("y")) {
                 try {
                     selectedParty = new Party(name);
                 } catch (NotValidPartyException e) {
@@ -237,16 +196,16 @@ public class Main {
     private static boolean askForEReceipt() {
         System.out.print("Do you want to get an e-receipt? (Y/N): ");
 
-        return reader.nextLine().toLowerCase().equals("y");
+        return scanner.nextLine().toLowerCase().equals("y");
     }
 
     private static MailAddress askForEMail() {
         MailAddress selectedMailAddress = null;
         while(selectedMailAddress == null) {
             System.out.print("Write down your e-mail adress: ");
-            String name = reader.nextLine();
+            String name = scanner.nextLine();
             System.out.print("Are you sure " + name + " is your e-mail address? (Y/N): ");
-            if(reader.nextLine().toLowerCase().equals("y")) {
+            if(scanner.nextLine().toLowerCase().equals("y")) {
                 try {
                     selectedMailAddress = new MailAddress(name);
                 } catch (NotValidMailException e) {
