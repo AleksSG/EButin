@@ -3,8 +3,8 @@ package implementations;
 import data.DigitalSignature;
 import data.Nif;
 import data.Party;
-import exceptions.NotValidDigitalSignatureException;
-import exceptions.NotValidNifException;
+import exceptions.data.NotValidDigitalSignatureException;
+import exceptions.data.NotValidNifException;
 import services.ElectoralOrganism;
 
 import java.security.MessageDigest;
