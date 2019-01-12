@@ -7,6 +7,9 @@ import exceptions.*;
 import exceptions.data.*;
 import kiosk.VotingKiosk;
 import services.ElectoralOrganism;
+import services.ElectoralOrganismImplementation;
+import services.MailerServiceImplementation;
+import services.PartiesDBImplementation;
 import verification.BiometricVerification;
 import verification.IdentityVerify;
 import verification.ManualVerification;
@@ -30,62 +33,28 @@ public class Main {
     private static final BigInteger FACE_NUMBER_PASSPORT = new BigInteger("12332074637085634950873632074650748365038465940984873504736348734853");
     private static final BigInteger FINGER_NUMBER_PASSPORT = new BigInteger("43537860843765048730856278068047362084726478623580635748658473620831");
 
-    private static Scanner scanner;
-    private static VotingKiosk votingKiosk;
-
     public static void main(String[] args) {
 
         //Initialize the reader from system input
-        scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         //Initialize VotingKiosk instance
-        votingKiosk = new VotingKiosk(){
-            public Set<Party> getPartiesFromDB(){
-                return new HashSet<Party>() {{
-                    try {
-                        add(new Party("Cs"));
-                        add(new Party("JxCAT"));
-                        add(new Party("ERC"));
-                        add(new Party("PSC"));
-                        add(new Party("COMÚ PODEM"));
-                        add(new Party("CUP"));
-                        add(new Party("PP"));
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }};
-            }
-        };
+        VotingKiosk votingKiosk = new VotingKiosk();
 
-        votingKiosk.setElectoralOrganism(new ElectoralOrganism() {
-            @Override
-            public boolean canVote(Nif nif) {
-                return true;
-            }
-
-            @Override
-            public void disableVoter(Nif nif) {
-
-            }
-
-            @Override
-            public DigitalSignature askForDigitalSignature(Party party) {
-                DigitalSignature digitalSignature = null;
-                try {
-                    digitalSignature = new DigitalSignature(new byte[32]);
-                } catch (NotValidDigitalSignatureException e) {
-                    e.printStackTrace();
-                }
-                return digitalSignature;
-            }
-        });
-
-        votingKiosk.setMailerService((address, signature) -> System.out.println("A mail has been sent to " + address.getMail()));
+        //Set services
+        try {
+            votingKiosk.setPartiesDB(new PartiesDBImplementation());
+        } catch (NoConnectionToDBException | NotValidSetOfPartiesException e) {
+            e.printStackTrace();
+            return;
+        }
+        votingKiosk.setElectoralOrganism(new ElectoralOrganismImplementation());
+        votingKiosk.setMailerService(new MailerServiceImplementation());
 
         System.out.print("Write 'start' in order to start a voting process: ");
         while(scanner.nextLine().equals("start")) {
             System.out.println("[VotingProcess] START\n");
-            votingProcess();
+            votingProcess(votingKiosk, scanner);
             System.out.println("\n[VotingProcess] END");
 
             System.out.print("\n\nWrite 'start' in order to start a voting process: ");
@@ -94,10 +63,10 @@ public class Main {
         System.out.println("\nBYE!!!");
     }
 
-    private static void votingProcess() {
+    private static void votingProcess(VotingKiosk votingKiosk, Scanner scanner) {
         System.out.println("A new voting process has been started!");
 
-        IdentityVerify identityVerify = askForConsent() ? getBiometricVerificationProcess() : getManualVerificationProcess();
+        IdentityVerify identityVerify = askForConsent(scanner) ? getBiometricVerificationProcess(scanner) : getManualVerificationProcess(scanner);
 
         try {
             votingKiosk.startSession(identityVerify);
@@ -106,12 +75,12 @@ public class Main {
             return;
         }
 
-        displayValidParties();
-        Party selectedParty = askForAPartyToVote();
+        displayValidParties(votingKiosk);
+        Party selectedParty = askForAPartyToVote(scanner);
         try {
             votingKiosk.vote(selectedParty);
         } catch (NullPointerException | SessionNotStartedException | NotValidDigitalSignatureException | VotingRightsFailedException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             try {
                 votingKiosk.closeSession();
             } catch (SessionNotStartedException e1) {
@@ -122,9 +91,9 @@ public class Main {
 
         System.out.println("Vote has been sent successfully!");
 
-        if(askForEReceipt()) {
+        if(askForEReceipt(scanner)) {
             try {
-                votingKiosk.sendeReceipt(askForEMail());
+                votingKiosk.sendeReceipt(askForEMail(scanner));
             } catch (SessionNotStartedException | HasNotVotedException e) {
                 e.printStackTrace();
                 try {
@@ -146,17 +115,17 @@ public class Main {
         System.out.println("Thanks for voting using this app! See you!");
     }
 
-    private static boolean askForConsent() {
+    private static boolean askForConsent(Scanner scanner) {
         System.out.print("Do you want to give us your consent about using your Passport Biometric Data? (Y/N): ");
 
         return scanner.nextLine().toLowerCase().equals("y");
     }
 
-    private static ManualVerification getManualVerificationProcess() {
+    private static ManualVerification getManualVerificationProcess(Scanner scanner) {
         return new ManualVerification(scanner, VALID_STAFF_ID, VALID_STAFF_PASSWORD);
     }
 
-    private static BiometricVerification getBiometricVerificationProcess() {
+    private static BiometricVerification getBiometricVerificationProcess(Scanner scanner) {
         Nif nif = null;
         BiometricData dataRead = null;
 
@@ -167,16 +136,16 @@ public class Main {
             e.printStackTrace();
         }
 
-        return new BiometricVerification(nif, new BiometricSoftwareImplementation(new BiometricReaderImplementation(dataRead), new BiometricScannerImplementation(FACE_NUMBER_SCANNED, FINGER_NUMBER_SCANNED)), getManualVerificationProcess());
+        return new BiometricVerification(nif, new BiometricSoftwareImplementation(new BiometricReaderImplementation(dataRead), new BiometricScannerImplementation(FACE_NUMBER_SCANNED, FINGER_NUMBER_SCANNED)), getManualVerificationProcess(scanner));
     }
 
-    private static void displayValidParties() {
+    private static void displayValidParties(VotingKiosk votingKiosk) {
         System.out.println("List of Valid Parties: ");
         votingKiosk.getPartiesFromVoteCounter().forEach(v -> System.out.println("\t" + v.getName()));
         System.out.println();
     }
 
-    private static Party askForAPartyToVote() {
+    private static Party askForAPartyToVote(Scanner scanner) {
         Party selectedParty = null;
         while(selectedParty == null) {
             System.out.print("Write down the name of the party you want to vote or press ENTER key to send a protest vote (is case sensitive): ");
@@ -193,13 +162,13 @@ public class Main {
         return selectedParty;
     }
 
-    private static boolean askForEReceipt() {
+    private static boolean askForEReceipt(Scanner scanner) {
         System.out.print("Do you want to get an e-receipt? (Y/N): ");
 
         return scanner.nextLine().toLowerCase().equals("y");
     }
 
-    private static MailAddress askForEMail() {
+    private static MailAddress askForEMail(Scanner scanner) {
         MailAddress selectedMailAddress = null;
         while(selectedMailAddress == null) {
             System.out.print("Write down your e-mail adress: ");

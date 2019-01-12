@@ -1,4 +1,4 @@
-package implementations;
+package services;
 
 import data.Party;
 import services.PartiesDB;

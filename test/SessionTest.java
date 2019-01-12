@@ -1,44 +1,35 @@
 import data.DigitalSignature;
 import data.Nif;
 import exceptions.HasNotVotedException;
+import exceptions.VerificationIdentityFailedException;
 import exceptions.data.NotValidDigitalSignatureException;
 import exceptions.data.NotValidNifException;
-import exceptions.VerificationIdentityFailedException;
 import kiosk.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import verification.ManualVerification;
 import verification.IdentityVerify;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 class SessionTest {
-    private static class ManualVerificationCorrectDouble extends ManualVerification {
-
+    private static class WrongIdentityStub implements IdentityVerify {
         @Override
-        public boolean logInSupportStaff() {
-            //First time login successfull
-            return true;
-        }
-
-        @Override
-        public Nif getManualNif() throws NotValidNifException {
-            return new Nif("12345678Z");
+        public Nif getNif() throws VerificationIdentityFailedException {
+            throw new VerificationIdentityFailedException("Something went wrong and the verification failed.");
         }
     }
 
-    private static class ManualVerificationIncorrectDouble extends ManualVerification {
-
+    private static class RightIdentityStub implements IdentityVerify {
         @Override
-        public boolean logInSupportStaff() {
-            //The staff member never logging in succesfully...
-            return false;
-        }
-
-        @Override
-        public Nif getManualNif() {
-            return null;
+        public Nif getNif() {
+            Nif nif = null;
+            try {
+                nif = new Nif("12345678A");
+            } catch (NotValidNifException e) {
+                e.printStackTrace();
+            }
+            return nif;
         }
     }
 
@@ -50,8 +41,8 @@ class SessionTest {
     @BeforeEach
     void setUp(){
         try {
-            identityVerificationCorrect = new ManualVerificationCorrectDouble();
-            identityVerificationIncorrect = new ManualVerificationIncorrectDouble();
+            identityVerificationCorrect = new RightIdentityStub();
+            identityVerificationIncorrect = new WrongIdentityStub();
             session = new Session(identityVerificationCorrect);
             digitalSignature = new DigitalSignature(new byte[32]);
         } catch (VerificationIdentityFailedException | NotValidDigitalSignatureException e) {

@@ -1,4 +1,4 @@
-package implementations;
+package services;
 
 import data.DigitalSignature;
 import data.Nif;
@@ -17,7 +17,6 @@ import java.util.Set;
 public class ElectoralOrganismImplementation implements ElectoralOrganism {
 
     private Set<Nif> canVoteNifs;
-    private int EO_SIGNATURE = this.hashCode();
 
     public ElectoralOrganismImplementation() {
         this.canVoteNifs = new HashSet<Nif>() {{

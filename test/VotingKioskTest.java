@@ -3,10 +3,6 @@ import data.MailAddress;
 import data.Nif;
 import data.Party;
 import exceptions.*;
-import exceptions.data.NotValidDigitalSignatureException;
-import exceptions.data.NotValidMailException;
-import exceptions.data.NotValidNifException;
-import exceptions.data.NotValidPartyException;
 import kiosk.VotingKiosk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import services.ElectoralOrganism;
 import services.MailerService;
 import services.PartiesDB;
-import verification.ManualVerification;
 import verification.IdentityVerify;
 
 import java.util.HashSet;
@@ -24,31 +19,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VotingKioskTest {
 
+    private static class IdentityVerifyCorrectMock implements IdentityVerify {
 
-    private static class ManualVerificationCorrectStub extends ManualVerification {
-        @Override
-        public boolean logInSupportStaff() {
-            //First time login successfull
-            return true;
+        private Nif defaultNif;
+
+        IdentityVerifyCorrectMock(Nif nif) {
+            defaultNif = nif;
         }
 
         @Override
-        public Nif getManualNif() throws NotValidNifException {
-            return new Nif("12345678A");
+        public Nif getNif() {
+            return defaultNif;
         }
     }
 
-    /*
-    private static class NoConnectivityToPartyDB implements PartiesDB {
+    private static class NoConnectivityToPartyDBStub implements PartiesDB {
         @Override
-        public Set<Party> getPartiesFromDB() throws NoConnectionToDBException{
+        public Set<Party> getPartiesFromDB() throws NoConnectionToDBException {
             throw new NoConnectionToDBException();
         }
     }
 
-    private static class CorrectConnectToPartyDB implements PartiesDB {
+    private static class CorrectConnectToPartyDBStub implements PartiesDB {
         @Override
-        public Set<Party> getPartiesFromDB() throws NoConnectionToDBException{
+        public Set<Party> getPartiesFromDB() {
             return new HashSet<Party>() {{
                 try {
                     add(new Party("PP"));
@@ -60,39 +54,40 @@ class VotingKioskTest {
                 }
             }};
         }
-    }*/
+    }
 
-    private static class TestElectoralOrganism implements ElectoralOrganism {
-        boolean canVote = true;
+    private static class ElectoralOrganismSpy implements ElectoralOrganism {
+
+        boolean disableVoterCalled = false;
+        boolean askedForSignature = false;
 
         @Override
         public boolean canVote(Nif nif) {
-            return canVote;
+            return true;
         }
 
         @Override
         public void disableVoter(Nif nif) {
-            this.canVote = false;
+            this.disableVoterCalled = true;
         }
 
         @Override
         public DigitalSignature askForDigitalSignature(Party party) {
+            this.askedForSignature = true;
             try {
-                return new DigitalSignature(cifrarOpcioVot(party));
+                return new DigitalSignature(new byte[32]);
             }
             catch(Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
-
-        private byte[] cifrarOpcioVot(Party party) {
-            return new byte[32];
-        }
     }
 
-    private static class TestMailerService implements MailerService {
-        public boolean emailSend = false;
+    private static class MailerServiceSpy implements MailerService {
+
+        boolean emailSend = false;
+
         @Override
         public void send(MailAddress address, DigitalSignature signature) {
             this.emailSend = true;
@@ -100,21 +95,26 @@ class VotingKioskTest {
     }
 
     private VotingKiosk votingKiosk;
-    private ElectoralOrganism teo;
-    private TestMailerService mst;
-    //private PartiesDB pdb;
+    private ElectoralOrganismSpy teo;
+    private MailerServiceSpy mst;
+    private NoConnectivityToPartyDBStub incorrectPartyDB;
+    private CorrectConnectToPartyDBStub correctPartyDB;
     private IdentityVerify identityVerify;
     private MailAddress mailAddress;
     private Party party;
+    private Nif nif;
 
     @BeforeEach
     void setUp() {
         votingKiosk = new VotingKiosk();
-        teo = new TestElectoralOrganism();
-        mst = new TestMailerService();
+        incorrectPartyDB = new NoConnectivityToPartyDBStub();
+        correctPartyDB = new CorrectConnectToPartyDBStub();
+        teo = new ElectoralOrganismSpy();
+        mst = new MailerServiceSpy();
 
         try {
-            identityVerify = new ManualVerificationCorrectStub();
+            nif = new Nif("12345678A");
+            identityVerify = new IdentityVerifyCorrectMock(nif);
             mailAddress = new MailAddress("blabla@gmail.com");
             votingKiosk.setElectoralOrganism(teo);
             votingKiosk.setMailerService(mst);
@@ -140,56 +140,27 @@ class VotingKioskTest {
         assertDoesNotThrow(() -> votingKiosk.closeSession());
     }
 
-    /*
-    @Test
-    @DisplayName("Cannot connect to the DB Exception")
-    void cantConnectDBTest() {
-        pdb = new NoConnectivityToPartyDB();
-        assertThrows(NoConnectionToDBException.class, () -> pdb.getPartiesFromDB());
-    }
-    */
     @Test
     void voteTest() {
-        //pdb = new CorrectConnectToPartyDB();
-
+        assertThrows(NoConnectionToDBException.class, () -> votingKiosk.setPartiesDB(incorrectPartyDB));
+        assertDoesNotThrow(() -> votingKiosk.setPartiesDB(correctPartyDB));
         assertThrows(NullPointerException.class, () -> votingKiosk.vote(null));
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.vote(party));
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertDoesNotThrow(() -> votingKiosk.vote(party));
-        assertThrows(VotingRightsFailedException.class, () -> votingKiosk.vote(party));
+        assertTrue(teo.disableVoterCalled);
+        assertTrue(teo.askedForSignature);
     }
 
     @Test
     void sendeReceiptTest() {
+        assertThrows(NoConnectionToDBException.class, () -> votingKiosk.setPartiesDB(incorrectPartyDB));
+        assertDoesNotThrow(() -> votingKiosk.setPartiesDB(correctPartyDB));
         assertThrows(SessionNotStartedException.class, () -> votingKiosk.sendeReceipt(mailAddress));
         assertDoesNotThrow(() -> votingKiosk.startSession(identityVerify));
         assertThrows(HasNotVotedException.class, () -> votingKiosk.sendeReceipt(mailAddress));
         assertDoesNotThrow(() -> votingKiosk.vote(party));
         assertDoesNotThrow(() -> votingKiosk.sendeReceipt(mailAddress));
-    }
-
-    @Test
-    @DisplayName("Electoral Organism Double Test")
-    void ElectoralOrganismTesting() {
-        try {
-            assertTrue(teo.canVote(new Nif("12345678A")), "Valid NIF can vote");
-            teo.disableVoter(new Nif("12345678A"));
-            assertFalse(teo.canVote(new Nif("12345678A")), "Same NIF as before, now cannot vote");
-
-            assertEquals(new DigitalSignature(new byte[32]), teo.askForDigitalSignature(new Party("")));
-        } catch (NotValidNifException | NotValidPartyException | NotValidDigitalSignatureException e) {
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("Electoral Organism Double Test")
-    void MailerServiceTest() {
-        try {
-            mst.send(new MailAddress("prova@gmail.com"), new DigitalSignature(new byte[32]));
-            assertTrue(mst.emailSend, "Check if send");
-        } catch (NotValidDigitalSignatureException | NotValidMailException e) {
-            fail();
-        }
+        assertTrue(mst.emailSend);
     }
 }
