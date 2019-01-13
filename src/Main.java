@@ -1,12 +1,13 @@
-import biometric.BiometricReader;
 import biometric.BiometricReaderImplementation;
 import biometric.BiometricScannerImplementation;
 import biometric.BiometricSoftwareImplementation;
-import data.*;
+import data.BiometricData;
+import data.MailAddress;
+import data.Nif;
+import data.Party;
 import exceptions.*;
 import exceptions.data.*;
 import kiosk.VotingKiosk;
-import services.ElectoralOrganism;
 import services.ElectoralOrganismImplementation;
 import services.MailerServiceImplementation;
 import services.PartiesDBImplementation;
@@ -15,9 +16,7 @@ import verification.IdentityVerify;
 import verification.ManualVerification;
 
 import java.math.BigInteger;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Main {
     private static final int VALID_STAFF_ID = 23;
