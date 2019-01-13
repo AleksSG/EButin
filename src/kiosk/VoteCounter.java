@@ -1,14 +1,13 @@
 package kiosk;
 
 import data.*;
-import exceptions.NotValidSetOfPartiesException;
-import exceptions.PartyNotFoundException;
+import exceptions.kiosk.NotValidSetOfPartiesException;
+import exceptions.kiosk.PartyNotFoundException;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
-public class VoteCounter {
+class VoteCounter {
 
     private final HashMap<Party, PartyVoteCounter> partiesVoteCounter;
 
@@ -17,7 +16,7 @@ public class VoteCounter {
     private final PartyVoteCounter numNulls;
 
 
-    public VoteCounter(Set<Party> validParties) throws NotValidSetOfPartiesException {
+    VoteCounter(Set<Party> validParties) throws NotValidSetOfPartiesException {
         if (validParties == null || validParties.isEmpty())
             throw new NotValidSetOfPartiesException();
 
@@ -44,7 +43,7 @@ public class VoteCounter {
         numVotes.increment();
     }
 
-    public void scrutinize(Party party) {
+    void scrutinize(Party party) {
         if (party == null)
             throw new NullPointerException("The parameter party mustn't be null");
 
@@ -56,7 +55,7 @@ public class VoteCounter {
             countParty(party);
     }
 
-    public int getVotesFor(Party party) throws PartyNotFoundException {
+    int getVotesFor(Party party) throws PartyNotFoundException {
         PartyVoteCounter counter = partiesVoteCounter.get(party);
         if (counter == null)
             throw new PartyNotFoundException();
@@ -64,15 +63,15 @@ public class VoteCounter {
         return counter.getVotes();
     }
 
-    public int getNulls() {
+    int getNulls() {
         return numNulls.getVotes();
     }
 
-    public int getBlanks() {
+    int getBlanks() {
         return numBlanks.getVotes();
     }
 
-    public int getTotal() {
+    int getTotal() {
         return numVotes.getVotes();
     }
 
@@ -80,18 +79,18 @@ public class VoteCounter {
         return partiesVoteCounter.keySet();
     }
 
-    public static final class PartyVoteCounter {
+    static final class PartyVoteCounter {
         private int numVotes;
 
-        public PartyVoteCounter() {
+        PartyVoteCounter() {
             numVotes = 0;
         }
 
-        public void increment() {
+        void increment() {
             numVotes++;
         }
 
-        public int getVotes() {
+        int getVotes() {
             return numVotes;
         }
     }

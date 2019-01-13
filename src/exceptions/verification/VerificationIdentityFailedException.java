@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.verification;
 
 public class VerificationIdentityFailedException extends Exception {
     public VerificationIdentityFailedException(String message){

@@ -1,7 +1,7 @@
 package services;
 
 import data.Party;
-import exceptions.NoConnectionToDBException;
+import exceptions.services.NoConnectionToDBException;
 
 import java.util.Set;
 

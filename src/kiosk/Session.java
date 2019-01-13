@@ -2,16 +2,16 @@ package kiosk;
 
 import data.DigitalSignature;
 import data.Nif;
-import exceptions.HasNotVotedException;
+import exceptions.kiosk.HasNotVotedException;
 import exceptions.data.NotValidDigitalSignatureException;
-import exceptions.VerificationIdentityFailedException;
+import exceptions.verification.VerificationIdentityFailedException;
 import verification.IdentityVerify;
 
-public class Session {
+class Session {
     private Nif nif;
     private DigitalSignature digitalSignature;
 
-    public Session(IdentityVerify identityVerify) throws VerificationIdentityFailedException {
+    Session(IdentityVerify identityVerify) throws VerificationIdentityFailedException {
         if(identityVerify == null)
             throw new VerificationIdentityFailedException("This parameter can't be null");
 
@@ -19,14 +19,14 @@ public class Session {
         digitalSignature = null;
     }
 
-    public void setDigitalSignature(DigitalSignature digitalSignature) throws NotValidDigitalSignatureException {
+    void setDigitalSignature(DigitalSignature digitalSignature) throws NotValidDigitalSignatureException {
         if(digitalSignature == null)
             throw new NotValidDigitalSignatureException();
 
         this.digitalSignature = digitalSignature;
     }
 
-    public DigitalSignature getDigitalSignature() throws HasNotVotedException {
+    DigitalSignature getDigitalSignature() throws HasNotVotedException {
         if(digitalSignature == null)
             throw new HasNotVotedException();
 

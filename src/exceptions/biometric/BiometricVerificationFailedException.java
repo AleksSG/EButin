@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.biometric;
 
 public class BiometricVerificationFailedException extends Exception{
     public BiometricVerificationFailedException(){

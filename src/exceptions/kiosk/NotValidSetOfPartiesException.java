@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.kiosk;
 
 public class NotValidSetOfPartiesException extends Exception {
     public NotValidSetOfPartiesException(){

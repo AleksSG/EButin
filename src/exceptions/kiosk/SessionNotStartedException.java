@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.kiosk;
 
 public class SessionNotStartedException extends Exception {
     public SessionNotStartedException(){
