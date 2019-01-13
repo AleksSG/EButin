@@ -18,7 +18,7 @@ import verification.ManualVerification;
 import java.math.BigInteger;
 import java.util.Scanner;
 
-public class Main {
+public class TerminalDeVot {
     private static final int VALID_STAFF_ID = 23;
     private static final String VALID_STAFF_PASSWORD = "root";
 
