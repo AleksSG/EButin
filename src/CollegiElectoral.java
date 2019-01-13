@@ -40,14 +40,7 @@ public class CollegiElectoral {
         //Initialize VotingKiosk instance
         VotingKiosk votingKiosk = new VotingKiosk();
 
-        setServices(votingKiosk);
-
-        System.out.print("Write 'start' in order to start a voting process: ");
-        startVotingProcess(votingKiosk, scanner);
-        System.out.println("\nBYE!!!");
-    }
-
-    private static void setServices(VotingKiosk votingKiosk) {
+        //Set services
         try {
             votingKiosk.setPartiesDB(new PartiesDBImplementation());
         } catch (NoConnectionToDBException | NotValidSetOfPartiesException e) {
@@ -56,9 +49,8 @@ public class CollegiElectoral {
         }
         votingKiosk.setElectoralOrganism(new ElectoralOrganismImplementation());
         votingKiosk.setMailerService(new MailerServiceImplementation());
-    }
 
-    private static void startVotingProcess(VotingKiosk votingKiosk, Scanner scanner) {
+        System.out.print("Write 'start' in order to start a voting process: ");
         while(scanner.nextLine().equals("start")) {
             System.out.println("[VotingProcess] START\n");
             votingProcess(votingKiosk, scanner);
@@ -66,6 +58,8 @@ public class CollegiElectoral {
 
             System.out.print("\n\nWrite 'start' in order to start a voting process: ");
         }
+
+        System.out.println("\nBYE!!!");
     }
 
     private static void votingProcess(VotingKiosk votingKiosk, Scanner scanner) {
@@ -73,54 +67,57 @@ public class CollegiElectoral {
 
         IdentityVerify identityVerify = askForConsent(scanner) ? getBiometricVerificationProcess(scanner) : getManualVerificationProcess(scanner);
 
-        startSession(votingKiosk, identityVerify);
-
-        displayValidParties(votingKiosk);
-        vote(votingKiosk, askForAPartyToVote(scanner));
-
-        if(askForEReceipt(scanner)) {
-            sendEmail(votingKiosk, scanner);
-        }
-
-        votingKiosk.closeSession();
-
-        System.out.println("Thanks for voting using this app! See you!");
-    }
-
-    private static void startSession(VotingKiosk votingKiosk, IdentityVerify identityVerify) {
         try {
             votingKiosk.startSession(identityVerify);
         } catch (SessionNotFinishedException | VerificationIdentityFailedException e) {
             System.out.println(e.getMessage());
             return;
         }
+
+        displayValidParties(votingKiosk);
+        Party selectedParty = askForAPartyToVote(scanner);
+        try {
+            votingKiosk.vote(selectedParty);
+        } catch (NullPointerException | SessionNotStartedException | NotValidDigitalSignatureException | VotingRightsFailedException | NotValidPartyException | AServiceNotInitializedException e) {
+            e.printStackTrace();
+            try {
+                votingKiosk.closeSession();
+            } catch (SessionNotStartedException e1) {
+                e1.printStackTrace();
+            }
+            return;
+        }
+
+        System.out.println("Vote has been sent successfully!");
+
+        if(askForEReceipt(scanner)) {
+            try {
+                votingKiosk.sendeReceipt(askForEMail(scanner));
+            } catch (SessionNotStartedException | HasNotVotedException e) {
+                e.printStackTrace();
+                try {
+                    votingKiosk.closeSession();
+                } catch (SessionNotStartedException e1) {
+                    e1.printStackTrace();
+                }
+                return;
+            }
+        }
+
+        try {
+            votingKiosk.closeSession();
+        } catch (SessionNotStartedException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        System.out.println("Thanks for voting using this app! See you!");
     }
 
     private static boolean askForConsent(Scanner scanner) {
         System.out.print("Do you want to give us your consent about using your Passport Biometric Data? (Y/N): ");
 
         return scanner.nextLine().toLowerCase().equals("y");
-    }
-
-    private static void vote(VotingKiosk votingKiosk, Party selectedParty) {
-        try {
-            votingKiosk.vote(selectedParty);
-            System.out.println("Vote has been sent successfully!");
-        } catch (NullPointerException | SessionNotStartedException | NotValidDigitalSignatureException | VotingRightsFailedException | NotValidPartyException | AServiceNotInitializedException e) {
-            e.printStackTrace();
-            votingKiosk.closeSession();
-            return;
-        }
-    }
-
-    private static void sendEmail(VotingKiosk votingKiosk, Scanner scanner) {
-        try {
-            votingKiosk.sendeReceipt(askForEMail(scanner));
-        } catch (SessionNotStartedException | HasNotVotedException e) {
-            e.printStackTrace();
-            votingKiosk.closeSession();
-            return;
-        }
     }
 
     private static ManualVerification getManualVerificationProcess(Scanner scanner) {
@@ -150,7 +147,7 @@ public class CollegiElectoral {
     private static Party askForAPartyToVote(Scanner scanner) {
         Party selectedParty = null;
         while(selectedParty == null) {
-            System.out.print("Write down the name of the party you want to vote or press ENTER key to send a protest vote (it is case sensitive): ");
+            System.out.print("Write down the name of the party you want to vote or press ENTER key to send a protest vote (is case sensitive): ");
             String name = scanner.nextLine();
             System.out.print("Are you sure you want to vote " + name + "? (Y/N): ");
             if(scanner.nextLine().toLowerCase().equals("y")) {
@@ -175,7 +172,7 @@ public class CollegiElectoral {
         while(selectedMailAddress == null) {
             System.out.print("Write down your e-mail adress: ");
             String name = scanner.nextLine();
-            System.out.print("Are you sure '" + name + "' is your e-mail address? (Y/N): ");
+            System.out.print("Are you sure " + name + " is your e-mail address? (Y/N): ");
             if(scanner.nextLine().toLowerCase().equals("y")) {
                 try {
                     selectedMailAddress = new MailAddress(name);

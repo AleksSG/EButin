@@ -46,7 +46,10 @@ public class VotingKiosk {
         session = new Session(identityVerify);
     }
 
-    public void closeSession() {
+    public void closeSession() throws SessionNotStartedException {
+        if(this.session == null)
+            throw new SessionNotStartedException();
+
         this.session = null;
     }
 
