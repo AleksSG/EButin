@@ -1,10 +1,11 @@
+package kiosk;
+
 import data.DigitalSignature;
 import data.Nif;
-import exceptions.HasNotVotedException;
-import exceptions.VerificationIdentityFailedException;
+import exceptions.kiosk.HasNotVotedException;
+import exceptions.verification.VerificationIdentityFailedException;
 import exceptions.data.NotValidDigitalSignatureException;
 import exceptions.data.NotValidNifException;
-import kiosk.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

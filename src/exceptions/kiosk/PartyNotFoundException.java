@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.kiosk;
 
 public class PartyNotFoundException extends Exception {
     public PartyNotFoundException(){

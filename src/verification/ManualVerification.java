@@ -1,7 +1,7 @@
 package verification;
 
 import data.Nif;
-import exceptions.VerificationIdentityFailedException;
+import exceptions.verification.VerificationIdentityFailedException;
 import exceptions.data.NotValidNifException;
 
 import java.util.Scanner;
@@ -11,13 +11,13 @@ public class ManualVerification implements IdentityVerify {
     private int attempts;
     private Scanner scanner;
     private int validStaffId;
-    private String passwd;
+    private String password;
 
-    public ManualVerification(Scanner scanner, int validStaffId, String passwd) {
+    public ManualVerification(Scanner scanner, int validStaffId, String password) {
         this.scanner = scanner;
         attempts = 0;
         this.validStaffId = validStaffId;
-        this.passwd = passwd;
+        this.password = password;
     }
 
     @Override
@@ -42,16 +42,18 @@ public class ManualVerification implements IdentityVerify {
         return false;
     }
 
-    public boolean logInSupportStaff() {
+    private boolean logInSupportStaff() {
         System.out.println("A support staff member will verify your identity.");
         System.out.println("Please, wait until he or she comes.");
         scanner.nextLine();
         System.out.print("[userId]: ");
         int staffMemberId = scanner.nextInt();
         scanner.nextLine();
+        //System.out.println(staffMemberId); For testing purposes
         System.out.print("[password]: ");
         String staffMemberPassword = scanner.nextLine();
+        //System.out.println(staffMemberPassword); For testing purposes
 
-        return staffMemberId == validStaffId && staffMemberPassword.equals(passwd);
+        return staffMemberId == validStaffId && staffMemberPassword.equals(password);
     }
 }

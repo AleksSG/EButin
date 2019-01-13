@@ -1,3 +1,5 @@
+package kiosk;
+
 import data.Party;
 import kiosk.VoteCounter;
 import org.junit.jupiter.api.*;

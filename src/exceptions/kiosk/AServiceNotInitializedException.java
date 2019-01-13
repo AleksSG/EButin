@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.kiosk;
 
 public class AServiceNotInitializedException extends Exception{
     public AServiceNotInitializedException(){

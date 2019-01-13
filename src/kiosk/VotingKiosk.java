@@ -2,9 +2,11 @@ package kiosk;
 
 import data.MailAddress;
 import data.Party;
-import exceptions.*;
 import exceptions.data.NotValidDigitalSignatureException;
 import exceptions.data.NotValidPartyException;
+import exceptions.kiosk.*;
+import exceptions.services.NoConnectionToDBException;
+import exceptions.verification.VerificationIdentityFailedException;
 import services.ElectoralOrganism;
 import services.MailerService;
 import services.PartiesDB;

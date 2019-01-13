@@ -1,6 +1,6 @@
 package biometric;
 
-import exceptions.BiometricVerificationFailedException;
+import exceptions.biometric.BiometricVerificationFailedException;
 
 public interface BiometricSoftware {
     void verifyBiometricData() throws BiometricVerificationFailedException;

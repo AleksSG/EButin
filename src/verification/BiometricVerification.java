@@ -2,8 +2,8 @@ package verification;
 
 import biometric.BiometricSoftware;
 import data.Nif;
-import exceptions.BiometricVerificationFailedException;
-import exceptions.VerificationIdentityFailedException;
+import exceptions.biometric.BiometricVerificationFailedException;
+import exceptions.verification.VerificationIdentityFailedException;
 
 public class BiometricVerification implements IdentityVerify {
 

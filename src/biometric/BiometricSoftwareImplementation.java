@@ -1,7 +1,7 @@
 package biometric;
 
 import data.BiometricData;
-import exceptions.BiometricVerificationFailedException;
+import exceptions.biometric.BiometricVerificationFailedException;
 import exceptions.data.NotValidBiometricDataException;
 
 public class BiometricSoftwareImplementation implements BiometricSoftware {
