@@ -4,11 +4,13 @@ import data.MailAddress;
 import data.Party;
 import exceptions.*;
 import exceptions.data.NotValidDigitalSignatureException;
+import exceptions.data.NotValidPartyException;
 import services.ElectoralOrganism;
 import services.MailerService;
 import services.PartiesDB;
 import verification.IdentityVerify;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class VotingKiosk {
@@ -51,13 +53,13 @@ public class VotingKiosk {
         this.session = null;
     }
 
-    public void vote(Party party) throws SessionNotStartedException, NotValidDigitalSignatureException, VotingRightsFailedException {
+    public void vote(Party party) throws NotValidPartyException, AServiceNotInitializedException, SessionNotStartedException, NotValidDigitalSignatureException, VotingRightsFailedException {
         if(party == null)
-            throw new NullPointerException("The parameter party mustn't be null.");
-        if(elecOrg == null)
-            throw new NullPointerException("The ElectoralOrganism han't ben set yet.");
-        if(voteCounter == null)
-            throw new NullPointerException("The VoteCounter hasn't been initialized.");
+            throw new NotValidPartyException();
+
+        if(elecOrg == null || voteCounter == null)
+            throw new AServiceNotInitializedException();
+
         if(session == null)
             throw new SessionNotStartedException();
 
@@ -79,7 +81,7 @@ public class VotingKiosk {
     public Set<Party> getPartiesFromVoteCounter() {
         if(voteCounter != null)
             return voteCounter.getValidParties();
-        return null;
+        return new HashSet<>();
     }
 
 }

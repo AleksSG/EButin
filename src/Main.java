@@ -79,7 +79,7 @@ public class Main {
         Party selectedParty = askForAPartyToVote(scanner);
         try {
             votingKiosk.vote(selectedParty);
-        } catch (NullPointerException | SessionNotStartedException | NotValidDigitalSignatureException | VotingRightsFailedException e) {
+        } catch (NullPointerException | SessionNotStartedException | NotValidDigitalSignatureException | VotingRightsFailedException | NotValidPartyException | AServiceNotInitializedException e) {
             e.printStackTrace();
             try {
                 votingKiosk.closeSession();
